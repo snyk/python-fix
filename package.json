@@ -1,5 +1,5 @@
 {
-  "name": "Python Fix",
+  "name": "python-fix",
   "description": "Snyk python ecosystem fix remediation",
   "main": "dist/index.js",
   "scripts": {
@@ -33,18 +33,13 @@
   ],
   "homepage": "https://github.com/snyk-tech-services/Python Fix#readme",
   "dependencies": {
-    "lodash": "^4.17.15",
-    "source-map-support": "^0.5.16",
-    "tslib": "^1.10.0",
     "debug": "^4.1.1",
-    "@snyk/configstore": "^3.2.0-rc1",
-    "axios": "^0.19.2",
-    "snyk-config": "^3.0.0"
+    "source-map-support": "^0.5.16",
+    "tslib": "^1.10.0"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.1",
-    "@types/lodash": "^4.14.149",
-    "@types/node": "^12.12.26",
+    "@types/jest": "25.2.3",
+    "@types/node": "12.20.10",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^2.18.0",
     "eslint": "^6.8.0",
@@ -62,6 +57,8 @@
     ]
   },
   "release": {
-    "branches": ["master"]
+    "branches": [
+      "master"
+    ]
   }
 }
