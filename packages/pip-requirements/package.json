@@ -2,7 +2,7 @@
   "name": "@snyk-fix/pip-requirements",
   "description": "Apply issue fixes to requirements files managed with pip",
   "main": "dist/index.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "format:check": "prettier --check '{''{lib,test}/!(fixtures)/**/*,*}.{js,ts,json,yml}'",
     "format": "prettier --write '{''{lib,test}/!(fixtures)/**/*,*}.{js,ts,json,yml}'",
