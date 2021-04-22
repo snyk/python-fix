@@ -2,7 +2,7 @@
   "name": "pipenv-pipfile",
   "description": "Snyk python Pipfile fix remediation",
   "main": "dist/index.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "format:check": "prettier --check '{''{lib,test}/!(fixtures)/**/*,*}.{js,ts,json,yml}'",
     "format": "prettier --write '{''{lib,test}/!(fixtures)/**/*,*}.{js,ts,json,yml}'",
