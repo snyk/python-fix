@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/snyk-tech-services/Python Fix/compare/pipenv-pipfile@0.2.1...pipenv-pipfile@0.2.2) (2021-04-22)
+
+
+### Bug Fixes
+
+* drop js ([7e04d21](https://github.com/snyk-tech-services/Python Fix/commit/7e04d21011bdf78371fa0763ed47fd788abe3a40))
+
+
+
+
+
 ## [0.2.1](https://github.com/snyk-tech-services/Python Fix/compare/pipenv-pipfile@0.2.0...pipenv-pipfile@0.2.1) (2021-04-22)
 
 **Note:** Version bump only for package pipenv-pipfile
