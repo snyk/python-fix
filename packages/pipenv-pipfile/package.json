@@ -34,6 +34,7 @@
   ],
   "homepage": "https://github.com/snyk-tech-services/Python Fix#readme",
   "dependencies": {
+    "@snyk-fix/pip-requirements": "^0.1.0",
     "debug": "^4.1.1",
     "source-map-support": "^0.5.16",
     "tslib": "^1.10.0"
