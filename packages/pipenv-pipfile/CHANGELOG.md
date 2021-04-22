@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/snyk-tech-services/Python Fix/compare/pipenv-pipfile@0.1.0...pipenv-pipfile@0.2.0) (2021-04-22)
+
+
+### Features
+
+* connect the packages ([97cef57](https://github.com/snyk-tech-services/Python Fix/commit/97cef57a25ed4ccdaac1b3908f5083acf914d713))
+
+
+
+
+
 # [0.1.0](https://github.com/snyk-tech-services/Python Fix/compare/pipenv-pipfile@0.0.3...pipenv-pipfile@0.1.0) (2021-04-22)
 
 
