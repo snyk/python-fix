@@ -1,6 +1,6 @@
 {
   "name": "pipenv-pipfile",
-  "description": "Snyk python ecosystem fix remediation",
+  "description": "Snyk python Pipfile fix remediation",
   "main": "dist/index.js",
   "version": "0.0.1",
   "scripts": {
