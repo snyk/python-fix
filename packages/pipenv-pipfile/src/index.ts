@@ -1,3 +1,3 @@
-export function pipenvPipfileFix() {
+export function pipenvPipfileFix(): boolean {
   return true;
 }
