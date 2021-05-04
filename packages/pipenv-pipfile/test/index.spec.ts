@@ -1,4 +1,5 @@
-import { pipenvPipfileFix } from '../../../src/packages/pipenv-pipfile';
+import { pipenvPipfileFix } from "../src";
+
 test('Is everything ready for the development?', async () => {
   expect(pipenvPipfileFix()).toBeTruthy();
 });
