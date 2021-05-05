@@ -49,4 +49,4 @@ async function runPipenvInstall(
 
   return res;
 }
-export const pipEnvInstall = limiter.wrap(runPipenvInstall);
+export const pipenvInstall = limiter.wrap(runPipenvInstall);
