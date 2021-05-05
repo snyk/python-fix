@@ -1,4 +1,4 @@
-export function isSupportedPipenvVersion(
+export function isPipenvSupportedVersion(
   version: string,
 ): { supported: boolean; versions: string[] } {
   // https://pipenv.pypa.io/en/latest/changelog/

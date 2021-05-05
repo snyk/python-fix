@@ -1,8 +1,8 @@
-import { isSupportedPipenvVersion } from '../../src/supported-pipenv-version';
+import { isPipenvSupportedVersion } from '../../src/supported-pipenv-version';
 
 describe('extractPipenvVersion', () => {
   it('2018.11.26 is supported', async () => {
-    const { supported, versions } = isSupportedPipenvVersion('2018.11.26');
+    const { supported, versions } = isPipenvSupportedVersion('2018.11.26');
     expect(supported).toBeTruthy();
     expect(versions).toEqual([
       '2020.11.4',
@@ -18,7 +18,7 @@ describe('extractPipenvVersion', () => {
     ]);
   });
   it('unknown version is not supported', async () => {
-    const { supported } = isSupportedPipenvVersion('unknown');
+    const { supported } = isPipenvSupportedVersion('unknown');
     expect(supported).toBeFalsy();
   });
 });

@@ -17,7 +17,7 @@ export function extractPipenvVersion(stdout: string): string | null {
   return version;
 }
 
-export async function checkPipenvInstalled(): Promise<{
+export async function isPipenvInstalled(): Promise<{
   version: string | null;
 }> {
   let res: ExecuteResponse;
