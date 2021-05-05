@@ -6,7 +6,7 @@ describe('execute', () => {
   afterEach(() => {
     filesToDelete.map((f) => fs.unlinkSync(f));
   });
-  it('returns all data when command succeds', async () => {
+  it('returns all data when command succeeds', async () => {
     const res = await execute('pipenv', ['--version'], {});
     expect(res).toEqual({
       command: 'pipenv --version',
@@ -39,5 +39,5 @@ describe('execute', () => {
       ),
       stdout: '',
     });
-  });
+  }, 30000);
 });
