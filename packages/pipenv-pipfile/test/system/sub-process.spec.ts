@@ -1,6 +1,11 @@
+import * as fs from 'fs';
 import { execute } from '../../src/sub-process';
 
 describe('execute', () => {
+  let filesToDelete: string[] = [];
+  afterEach(() => {
+    filesToDelete.map((f) => fs.unlinkSync(f));
+  });
   it('returns all data when command succeds', async () => {
     const res = await execute('pipenv', ['--version'], {});
     expect(res).toEqual({
@@ -23,6 +28,8 @@ describe('execute', () => {
   });
   it('returns all stderr data when command is invalid', async () => {
     const res = await execute('pipenv', ['--python', '1.2.3'], {});
+    // created while running the above command that fails
+    filesToDelete = ['Pipfile'];
     expect(res).toEqual({
       command: 'pipenv --python 1.2.3',
       duration: expect.any(Number),
