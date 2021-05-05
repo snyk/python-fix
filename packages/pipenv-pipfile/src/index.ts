@@ -1,4 +1,1 @@
-export function pipenvPipfileFix() {
-  console.log('pipenv Pipfile fix');
-  return true;
-}
+export { checkPipenvInstalled } from './check-pip-env-installed';
