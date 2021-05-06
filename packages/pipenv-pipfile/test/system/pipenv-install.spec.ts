@@ -142,7 +142,7 @@ describe('pipenvInstall', () => {
     const packagesToInstall = ['django==3.1.3'];
     const config = {
       python: '3.8.1',
-    }
+    };
 
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
@@ -192,4 +192,3 @@ describe('pipenvInstall', () => {
     ];
   }, 90000);
 });
-

@@ -1,7 +1,7 @@
 const child_process = require('child_process');
 
 async function main() {
-  const pkgsWithMatrix = ['@snyk-fix/pip-requirements']; //, 'pipenv-pipfile'];
+  const pkgsWithMatrix = ['@snyk-fix/pipenv-pipfile']; //, 'pipenv-pipfile'];
 
   // list of changed packages (their names, not their folder names)
   const changedPackages = run(`lerna changed --loglevel error`).split('\n');
@@ -29,7 +29,7 @@ async function main() {
   const whitelist = pkgsToTestWithLerna
     .map((pkgName) => `--scope ${pkgName}`)
     .join(' ');
-  run(`lerna run test ${whitelist}`);
+  run(`lerna run test ${whitelist} --stream`);
 }
 
 main();
