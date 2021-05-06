@@ -12,7 +12,7 @@ commands:
   lerna_bootstrap:
     steps:
       - run:
-          name: Lerna bootstrap
+          name: lerna bootstrap
           command: |
             ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
   run_lerna_test:
@@ -24,38 +24,69 @@ commands:
     parameters:
       package-name:
         type: string
+      python_version:
+        type: string
+      pipenv_version:
+        type: string
     steps:
       - run:
-          name: Run tests
+          name: pyenv install << parameters.python_version >> && lerna run test --scope << parameters.package-name >> --stream`
           command: |
-            ./node_modules/.bin/lerna run test --scope << parameters.package-name >>
-
+            apt -qq update
+            apt -qq install python3-pip python-pip -y &> /dev/null
+            curl https://pyenv.run | $SHELL
+            export PATH="/root/.pyenv/bin:$PATH"
+            eval "$(pyenv init -)"
+            eval "$(pyenv virtualenv-init -)"
+            pyenv -v
+            export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
+            # Install the specific release of Python if it isn't already installed
+            pyenv install -s $PYTHON_VERSION_LATEST
+            # Required for a specific test
+            pyenv install -s 3.8.1
+            pyenv sh-shell $PYTHON_VERSION_LATEST
+            python --version
+            export LANG="en_US.UTF-8"
+            export LC_CTYPE="en_US.UTF-8"
+            export PATH=$HOME/.local/bin:$PATH
+            python -m pip install --user pipenv===$PIPENV_VER
+            export PATH="$PATH:$HOME/.local/bin"
+            python -m pipenv --version
+            ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
+          environment:
+            PYTHON_VERSION: << parameters.python_version >>
+            PIPENV_VER: << parameters.pipenv_version >>
 jobs:
   build-test:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10
     steps:
       - checkout_and_restore_cache
-      - run: npm install
+      - run: npm install --no-package-lock
       - lerna_bootstrap
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
-            - node_modules
+            - ./node_modules
       - run_lerna_test
-  test_pip-requirements:
+  test_pipenv-pipfile:
     docker:
-      - image: circleci/node:latest
+      - image: node:<< parameters.node_version >>
     parameters:
-      pip_version:
+      node_version:
         type: string
       python_version:
         type: string
+      pipenv_version:
+        type: string
     steps:
       - checkout_and_restore_cache
+      - run: npm install --no-package-lock
       - lerna_bootstrap
       - run_test:
-          package-name: "@snyk-fix/pip-requirements"
+          package-name: "@snyk-fix/pipenv-pipfile"
+          python_version: << parameters.python_version >>
+          pipenv_version: << parameters.pipenv_version >>
 workflows:
   version: 2
   build-test:
@@ -67,14 +98,16 @@ workflows:
               ignore:
                 - master
                 - /pull\/[0-9]+/
-      - test_pip-requirements:
+      - test_pipenv-pipfile:
+          name: Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              pip_version: [ '1','2' ]
-              python_version: [ '3','4' ]
+              node_version: ['10', '12', '14']
+              pipenv_version: ['2020.11.4', '2018.11.26']
+              python_version: ['3.9', '3.8', '3.7', '3.6', '2.7']
           filters:
             branches:
               ignore: /.*/
             tags:
               only:
-                - /test_@snyk-fix\/pip-requirements.*/
+                - /test_@snyk-fix\/pipenv-pipfile.*/

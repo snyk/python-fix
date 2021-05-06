@@ -1,12 +1,10 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "02f21d64a3ad1982faa633e07c665d47460c9502f0bd5ee73a10ab39d0820918"
+            "sha256": "26e6b1c85bf99e746e35212c0f1a6009296134ce2ee704420091d270063f8442"
         },
         "pipfile-spec": 6,
-        "requires": {
-            "python_version": "3.6"
-        },
+        "requires": {},
         "sources": [
             {
                 "name": "pypi",
@@ -18,11 +16,11 @@
     "default": {
         "django": {
             "hashes": [
-                "sha256:989d42289663ac88169ac2abe8d50b82b29b2fe135307badf588a3d2235c1eef",
-                "sha256:cf011874f54a16e7452e0fe1e7f4ec144b95b47ecf31766c9f1f8cf438f09c06"
+                "sha256:52475f607c92035d4ac8fee284f56213065a4a6b25ed43f7e39df0e576e69e9f",
+                "sha256:d96b804be412a5125a594023ec524a2010a6ffa4d408e5482ab6ff3cb97ec12f"
             ],
             "index": "pypi",
-            "version": "==1.6.1"
+            "version": "==2.0.1"
         },
         "ipaddress": {
             "hashes": [
@@ -31,6 +29,13 @@
             ],
             "index": "pypi",
             "version": "==1.0.23"
+        },
+        "pytz": {
+            "hashes": [
+                "sha256:83a4a90894bf38e243cf052c8b58f381bfe9a7a483f6a9cab140bc7f702ac4da",
+                "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"
+            ],
+            "version": "==2021.1"
         }
     },
     "develop": {
@@ -104,10 +109,10 @@
         },
         "six": {
             "hashes": [
-                "sha256:30639c035cdb23534cd4aa2dd52c3bf48f06e5f4a941509c8bafd8ce11080259",
-                "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"
+                "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926",
+                "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"
             ],
-            "version": "==1.15.0"
+            "version": "==1.16.0"
         },
         "tzlocal": {
             "hashes": [

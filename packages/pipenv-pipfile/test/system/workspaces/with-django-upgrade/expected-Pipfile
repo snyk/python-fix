@@ -9,6 +9,3 @@ dateparser = '*'
 [packages]
 ipaddress = '*'
 Django = "==2.0.1"
-
-[requires]
-python_version = "3.6"
