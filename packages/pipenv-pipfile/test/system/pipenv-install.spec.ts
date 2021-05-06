@@ -36,9 +36,18 @@ describe('pipenvInstall', () => {
 
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
-    await pipenvInstall(dir, packagesToInstall, config);
+    const res = await pipenvInstall(dir, packagesToInstall, config);
     // Assert
     // expect the updated file to match exactly expected file
+    expect(res).toEqual({
+      command: 'pipenv install django==2.0.1 transitive==1.1.1',
+      duration: expect.any(Number),
+      exitCode: 1,
+      stderr: expect.stringContaining(
+        'No matching distribution found for transitive==1.1.1',
+      ),
+      stdout: expect.stringContaining('Installing transitive==1.1.1'),
+    });
     const fixedFileContent = fs.readFileSync(
       pathLib.join(workspacesPath, targetFile),
       'utf-8',
@@ -68,95 +77,119 @@ describe('pipenvInstall', () => {
     ];
   }, 70000);
 
-  // it('applies expected changes to Pipfile (100% success)', async () => {
-  //   // Arrange
-  //   const targetFile = 'with-django-upgrade/Pipfile';
-  //   const expectedTargetFile = 'with-django-upgrade/expected-Pipfile';
+  it('applies expected changes to Pipfile (100% success)', async () => {
+    // Arrange
+    const targetFile = 'with-django-upgrade/Pipfile';
+    const expectedTargetFile = 'with-django-upgrade/expected-Pipfile';
 
-  //   const lockFile = 'with-django-upgrade/Pipfile.lock';
-  //   // backup original files
-  //   backupFiles(workspacesPath, [targetFile, lockFile]);
-  //   const testResult = {
-  //     ...generateTestResult(),
-  //     remediation: {
-  //       unresolved: [],
-  //       upgrade: {},
-  //       patch: {},
-  //       ignore: {},
-  //       pin: {
-  //         'django@1.6.1': {
-  //           upgradeTo: 'django@2.0.1',
-  //           vulns: [],
-  //           isTransitive: false,
-  //         },
-  //       },
-  //     },
-  //   };
+    const lockFile = 'with-django-upgrade/Pipfile.lock';
+    // backup original files
+    backupFiles(workspacesPath, [targetFile, lockFile]);
+    const packagesToInstall = ['django==2.0.1'];
+    const config = {};
 
-  //   const entityToFix = generateEntityToFix(
-  //     workspacesPath,
-  //     targetFile,
-  //     testResult,
-  //   );
+    // Act
+    const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
+    const res = await pipenvInstall(dir, packagesToInstall, config);
 
-  //   // Act
-  //   const result = await snykFix.fix([entityToFix], {
-  //     quiet: true,
-  //     // stripAnsi: true,
-  //   });
-  //   // Assert
-  //   // expect the updated file to match exactly expected file
-  //   const fixedFileContent = fs.readFileSync(
-  //     pathLib.join(workspacesPath, targetFile),
-  //     'utf-8',
-  //   );
-  //   const expectedPipfileContent = fs.readFileSync(
-  //     pathLib.join(workspacesPath, expectedTargetFile),
-  //     'utf-8',
-  //   );
-  //   expect(fixedFileContent).toEqual(expectedPipfileContent);
+    // Assert
+    // expect the updated file to match exactly expected file
+    expect(res).toEqual({
+      command: 'pipenv install django==2.0.1',
+      duration: expect.any(Number),
+      exitCode: 0,
+      stderr: expect.stringContaining('✔ Installation Succeeded'),
+      stdout: expect.stringContaining('Installing django==2.0.1'),
+    });
+    const fixedFileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, targetFile),
+      'utf-8',
+    );
+    const expectedPipfileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, expectedTargetFile),
+      'utf-8',
+    );
+    expect(fixedFileContent).toEqual(expectedPipfileContent);
 
-  //   // verify versions in lockfiles
-  //   const fixedLockfileContent = fs.readFileSync(
-  //     pathLib.join(workspacesPath, lockFile),
-  //     'utf-8',
-  //   );
+    // verify versions in lockfiles
+    const fixedLockfileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, lockFile),
+      'utf-8',
+    );
 
-  //   const pipfileLockJson = JSON.parse(fixedLockfileContent);
+    const pipfileLockJson = JSON.parse(fixedLockfileContent);
 
-  //   // lockfile still has original version
-  //   expect(pipfileLockJson.default.django.version).toEqual('==2.0.1');
+    // lockfile still has original version
+    expect(pipfileLockJson.default.django.version).toEqual('==2.0.1');
 
-  //   expect(result).toMatchObject({
-  //     exceptions: {},
-  //     results: {
-  //       python: {
-  //         failed: [],
-  //         skipped: [],
-  //         succeeded: [
-  //           {
-  //             original: entityToFix,
-  //             changes: [
-  //               {
-  //                 success: true,
-  //                 userMessage: 'Upgraded django from 1.6.1 to 2.0.1',
-  //               },
-  //             ],
-  //           },
-  //         ],
-  //       },
-  //     },
-  //   });
+    // restore original files
+    restoreFiles(workspacesPath, [targetFile, lockFile]);
+    filesToDelete = [
+      pathLib.join(workspacesPath, 'with-django-upgrade/Pipfile.orig'),
+      pathLib.join(workspacesPath, 'with-django-upgrade/Pipfile.lock.orig'),
+    ];
+  }, 90000);
 
-  //   // restore original files
-  //   restoreFiles(workspacesPath, [targetFile, lockFile]);
-  //   filesToDelete = [
-  //     pathLib.join(workspacesPath, 'with-django-upgrade/Pipfile.orig'),
-  //     pathLib.join(workspacesPath, 'with-django-upgrade/Pipfile.lock.orig'),
-  //   ];
-  // }, 90000);
+  it('Uses provided python version if --command param is present 3.8.1', async () => {
+    // Arrange
+    const targetFile = 'with-non-default-python-version/Pipfile';
+    const expectedTargetFile =
+      'with-non-default-python-version/expected-Pipfile';
 
-  it.todo(
-    'Uses provided python interpreter if --command was used for test/fix',
-  );
+    const lockFile = 'with-non-default-python-version/Pipfile.lock';
+    // backup original files
+    backupFiles(workspacesPath, [targetFile, lockFile]);
+    const packagesToInstall = ['django==3.1.3'];
+    const config = {
+      python: '3.8.1',
+    }
+
+    // Act
+    const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
+    const res = await pipenvInstall(dir, packagesToInstall, config);
+
+    // Assert
+    // expect the updated file to match exactly expected file
+    expect(res).toEqual({
+      command: 'pipenv install django==3.1.3 --python 3.8.1',
+      duration: expect.any(Number),
+      exitCode: 0,
+      stderr: expect.stringContaining('✔ Installation Succeeded'),
+      stdout: expect.stringContaining('Installing django==3.1.3'),
+    });
+    const fixedFileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, targetFile),
+      'utf-8',
+    );
+    const expectedPipfileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, expectedTargetFile),
+      'utf-8',
+    );
+    expect(fixedFileContent).toEqual(expectedPipfileContent);
+
+    // verify versions in lockfiles
+    const fixedLockfileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, lockFile),
+      'utf-8',
+    );
+
+    const pipfileLockJson = JSON.parse(fixedLockfileContent);
+
+    // lockfile still has original version
+    expect(pipfileLockJson.default.django.version).toEqual('==3.1.3');
+
+    // restore original files
+    restoreFiles(workspacesPath, [targetFile, lockFile]);
+    filesToDelete = [
+      pathLib.join(
+        workspacesPath,
+        'with-non-default-python-version/Pipfile.orig',
+      ),
+      pathLib.join(
+        workspacesPath,
+        'with-non-default-python-version/Pipfile.lock.orig',
+      ),
+    ];
+  }, 90000);
 });
+

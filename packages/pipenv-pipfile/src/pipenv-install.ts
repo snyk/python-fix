@@ -6,8 +6,7 @@ import { execute, ExecuteResponse } from './sub-process';
 const debug = debugLib('snyk-fix:python:Pipfile');
 
 interface PipEnvConfig {
-  pythonVersion?: '2' | '3';
-  command?: string; // use the provided Python interpreter
+  python?: string; // use the provided Python interpreter
 }
 
 const limiter = new Bottleneck({
@@ -15,15 +14,9 @@ const limiter = new Bottleneck({
 });
 
 // https://pipenv.pypa.io/en/latest/advanced/#changing-default-python-versions
-function getPythonversionArgs(config: PipEnvConfig): string | void {
-  if (config.command) {
-    return '--python'; // Performs the installation in a virtualenv using the provided Python interpreter.
-  }
-  if (config.pythonVersion === '2') {
-    return '--two'; // Performs the installation in a virtualenv using the system python3 link.
-  }
-  if (config.pythonVersion === '3') {
-    return '--three'; // Performs the installation in a virtualenv using the system python2 link.
+function getpythonArgs(config: PipEnvConfig): string[] | void {
+  if (config.python) {
+    return ['--python', config.python]; // Performs the installation in a virtualenv using the provided Python interpreter.
   }
 }
 async function runPipenvInstall(
@@ -33,9 +26,9 @@ async function runPipenvInstall(
 ): Promise<ExecuteResponse> {
   const args = ['install', ...requirements];
 
-  const pythonVersionArg = getPythonversionArgs(config);
-  if (pythonVersionArg) {
-    args.push(pythonVersionArg);
+  const pythonArg = getpythonArgs(config);
+  if (pythonArg) {
+    args.push(...pythonArg);
   }
 
   let res: ExecuteResponse;
@@ -50,3 +43,4 @@ async function runPipenvInstall(
   return res;
 }
 export const pipenvInstall = limiter.wrap(runPipenvInstall);
+
