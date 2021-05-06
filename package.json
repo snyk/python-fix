@@ -1,0 +1,12 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write '{''packages/*/{lib,src,test}/!(fixtures)/**/*,*}.{js,ts,json,yml}'",
+    "test:ci": "node run_test.js"
+  },
+  "devDependencies": {
+    "prettier": "^1.19.1",
+    "lerna": "^4.0.0"
+  }
+}
