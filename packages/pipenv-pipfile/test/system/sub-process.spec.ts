@@ -33,7 +33,7 @@ describe('execute', () => {
     expect(res).toEqual({
       command: 'pipenv --python 1.2.3',
       duration: expect.any(Number),
-      exitCode: 1,
+      exitCode: 0,
       stderr: expect.stringContaining(
         'Warning: Python 1.2.3 was not found on your system',
       ),

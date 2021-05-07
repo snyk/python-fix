@@ -98,7 +98,7 @@ describe('pipenvInstall', () => {
       command: 'pipenv install django==2.0.1',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: expect.stringContaining('✔ Installation Succeeded'),
+      stderr: expect.stringContaining('Updated Pipfile.lock'),
       stdout: expect.stringContaining('Installing django==2.0.1'),
     });
     const fixedFileContent = fs.readFileSync(
@@ -154,7 +154,7 @@ describe('pipenvInstall', () => {
       command: 'pipenv install django==3.1.3 --python 3.8.1',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: expect.stringContaining('✔ Installation Succeeded'),
+      stderr: expect.stringContaining('Updated Pipfile.lock'),
       stdout: expect.stringContaining('Installing django==3.1.3'),
     });
     const fixedFileContent = fs.readFileSync(

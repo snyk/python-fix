@@ -3,18 +3,20 @@ orbs:
   snyk: snyk/snyk@0.0.8
 
 commands:
-  install_pyenv:
+  install_node:
+    parameters:
+      node_version:
+        type: string
     steps:
       - run:
-          name: Installing pyenv
+          name: Installing Node.js << parameters.node_version >>
           command: |
-            apt -qq update
-            apt -qq install python3-pip python-pip -y &> /dev/null
-            curl https://pyenv.run | $SHELL
-            export PATH="/root/.pyenv/bin:$PATH"
-            eval "$(pyenv init -)"
-            eval "$(pyenv virtualenv-init -)"
-            pyenv -v
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+            nvm install $NODE_VERSION
+            source ~/.nvm/nvm.sh
+            node --version
+          environment:
+            NODE_VERSION: << parameters.node_version >>
   checkout_and_restore_cache:
     steps:
       - checkout
@@ -36,34 +38,15 @@ commands:
     parameters:
       package-name:
         type: string
-      python_version:
+      node_version:
         type: string
     steps:
       - run:
-          name: pyenv install << parameters.python_version >> && lerna run test --scope << parameters.package-name >> --stream`
+          name: install Node.js && lerna run test --scope << parameters.package-name >> --stream`
           command: |
-            apt -qq update
-            apt -qq install python3-pip python-pip -y &> /dev/null
-            curl https://pyenv.run | $SHELL
-            export PATH="/root/.pyenv/bin:$PATH"
-            eval "$(pyenv init -)"
-            eval "$(pyenv virtualenv-init -)"
-            pyenv -v
-            export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
-            # Install the specific release of Python if it isn't already installed
-            pyenv install -s $PYTHON_VERSION_LATEST
-            pyenv sh-shell $PYTHON_VERSION_LATEST
-            python --version
-            export LANG="en_US.UTF-8"
-            export LC_ALL="en_US.UTF-8"
-            export LC_CTYPE="en_US.UTF-8"
-            export PATH=$HOME/.local/bin:$PATH
-            python -m pip install --user pipenv
-            export PATH="$PATH:$HOME/.local/bin"
-            python -m pipenv --version
             ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
           environment:
-            PYTHON_VERSION: << parameters.python_version >>
+            NODE_VERSION: << parameters.node_version >>
 jobs:
   build-test:
     docker:
@@ -79,19 +62,25 @@ jobs:
       - run_lerna_test
   test_pipenv-pipfile:
     docker:
-      - image: node:<< parameters.node_version >>
+      - image: cimg/python:<< parameters.python_version >>-node
     parameters:
-      node_version:
-        type: string
       python_version:
         type: string
+      node_version:
+        type: string
     steps:
+      - run: |
+          python --version
+          pipenv --version
+      # - install_node:
+      #     node_version: << parameters.node_version >>
       - checkout_and_restore_cache
       - run: npm install --no-package-lock
       - lerna_bootstrap
       - run_test:
           package-name: "@snyk-fix/pipenv-pipfile"
-          python_version: << parameters.python_version >>
+          node_version: << parameters.node_version >>
+
 workflows:
   version: 2
   build-test:
@@ -108,7 +97,7 @@ workflows:
           matrix:
             parameters:
               node_version: ['10']
-              python_version: ['2.7', '3.6']
+              python_version: ['2.7', '3.6', '3.9']
           filters:
             branches:
               ignore: /.*/
