@@ -38,8 +38,6 @@ commands:
         type: string
       python_version:
         type: string
-      pipenv_version:
-        type: string
     steps:
       - run:
           name: pyenv install << parameters.python_version >> && lerna run test --scope << parameters.package-name >> --stream`
@@ -52,18 +50,20 @@ commands:
             eval "$(pyenv virtualenv-init -)"
             pyenv -v
             export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
-            echo $PYTHON_VERSION_LATEST
             # Install the specific release of Python if it isn't already installed
             pyenv install -s $PYTHON_VERSION_LATEST
             pyenv sh-shell $PYTHON_VERSION_LATEST
             python --version
+            export LANG="en_US.UTF-8"
+            export LC_ALL="en_US.UTF-8"
+            export LC_CTYPE="en_US.UTF-8"
             export PATH=$HOME/.local/bin:$PATH
-            python -m pip install --user pipenv==$PIPENV_VERSION
+            python -m pip install --user pipenv
+            export PATH="$PATH:$HOME/.local/bin"
             python -m pipenv --version
             ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
           environment:
             PYTHON_VERSION: << parameters.python_version >>
-            PIPENV_VERSION: << parameters.pipenv_version >>
 jobs:
   build-test:
     docker:
@@ -83,8 +83,6 @@ jobs:
     parameters:
       node_version:
         type: string
-      pipenv_version:
-        type: string
       python_version:
         type: string
     steps:
@@ -94,7 +92,6 @@ jobs:
       - run_test:
           package-name: "@snyk-fix/pipenv-pipfile"
           python_version: << parameters.python_version >>
-          pipenv_version: << parameters.pipenv_version >>
 workflows:
   version: 2
   build-test:
@@ -107,12 +104,11 @@ workflows:
                 - master
                 - /pull\/[0-9]+/
       - test_pipenv-pipfile:
-          name: Node << matrix.node_version >> | Python << matrix.python_version >> | Pip << matrix.pipenv_version >>
+          name: Node << matrix.node_version >> | Python << matrix.python_version >>
           matrix:
             parameters:
-              node_version: ['10','12', '14']
-              pipenv_version: ['2020.11.4', '2020.8.13']
-              python_version: ['2.7']
+              node_version: ['10']
+              python_version: ['2.7', '3.6']
           filters:
             branches:
               ignore: /.*/
