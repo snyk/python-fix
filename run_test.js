@@ -1,6 +1,10 @@
 const child_process = require('child_process');
 
 async function main() {
+  if (!process.env.CIRCLE_PULL_REQUEST) {
+    console.error('This script can only run from circle ci');
+    process.exit(1);
+  }
   const pkgsWithMatrix = ['@snyk-fix/pipenv-pipfile']; //, 'pipenv-pipfile'];
 
   // list of changed packages (their names, not their folder names)
@@ -19,8 +23,9 @@ async function main() {
     pkgsWithMatrix.includes(pkgName),
   );
 
+  const pr = process.env.CIRCLE_PULL_REQUEST.split('/').pop();
   for (const pkg of pkgsToTestWithDifferentEnvs) {
-    run(`git tag -f test_${pkg}-${Date.now()}`);
+    run(`git tag -f test_${pkg}_pr${pr}`);
   }
   run(
     `git push "https://git:$GH_TOKEN@github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME" --tag`,

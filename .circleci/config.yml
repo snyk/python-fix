@@ -3,34 +3,40 @@ orbs:
   snyk: snyk/snyk@0.0.8
 
 commands:
-  checkout_and_restore_cache:
+  checkout_and_install:
     steps:
       - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
+      - run: npm install --no-package-lock
   lerna_bootstrap:
     steps:
       - run:
           name: lerna bootstrap
-          command: |
-            ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
-  run_lerna_test:
+          command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
+  run_lerna_tests:
     steps:
       - run:
           name: npm test
           command: npm run test:ci
-  run_test:
+  run_generic_test:
     parameters:
       package-name:
         type: string
+    steps:
+      - run:
+          name: lerna run test --scope << parameters.package-name >> --stream
+          command: ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
+  run_test-pipenv-pipfile:
+    parameters:
       python_version:
         type: string
       pipenv_version:
         type: string
     steps:
       - run:
-          name: pyenv install << parameters.python_version >> && lerna run test --scope << parameters.package-name >> --stream`
+          name: pyenv install << parameters.python_version >>
           command: |
             apt -qq update
             apt -qq install python3-pip python-pip -y &> /dev/null
@@ -52,26 +58,33 @@ commands:
             python -m pip install --user pipenv===$PIPENV_VER
             export PATH="$PATH:$HOME/.local/bin"
             python -m pipenv --version
-            ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
           environment:
             PYTHON_VERSION: << parameters.python_version >>
             PIPENV_VER: << parameters.pipenv_version >>
+      - run_generic_test:
+          package-name: "@snyk-fix/pipenv-pipfile"
 jobs:
   build-test:
     docker:
-      - image: circleci/node:10
+      - image: circleci/node:latest
     steps:
-      - checkout_and_restore_cache
-      - run: npm install --no-package-lock
+      - checkout_and_install
       - lerna_bootstrap
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-      - run_lerna_test
-  test_pipenv-pipfile:
+      - run_lerna_tests
+  release:
     docker:
-      - image: node:<< parameters.node_version >>
+      - image: circleci/node:latest
+    steps:
+      - checkout_and_install
+      - lerna_bootstrap
+      - run:
+          name: lerna publish --ignore-scripts
+          command: ./node_modules/.bin/lerna publish
+  test_pipenv-pipfile:
     parameters:
       node_version:
         type: string
@@ -79,12 +92,12 @@ jobs:
         type: string
       pipenv_version:
         type: string
+    docker:
+      - image: node:<< parameters.node_version >>
     steps:
-      - checkout_and_restore_cache
-      - run: npm install --no-package-lock
+      - checkout_and_install
       - lerna_bootstrap
-      - run_test:
-          package-name: "@snyk-fix/pipenv-pipfile"
+      - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
 workflows:
@@ -102,12 +115,19 @@ workflows:
           name: Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              node_version: ['10', '12', '14']
-              pipenv_version: ['2020.11.4', '2020.8.13', '2020.6.2', '2020.5.28', '2018.11.26']
-              python_version: ['3.9', '3.8', '3.7', '3.6', '2.7']
+              node_version: [ '10', '12', '14' ]
+              pipenv_version: [ '2020.11.4', '2020.8.13', '2020.6.2', '2020.5.28', '2018.11.26' ]
+              python_version: [ '3.9', '3.8', '3.7', '3.6', '2.7' ]
           filters:
             branches:
               ignore: /.*/
             tags:
               only:
                 - /test_@snyk-fix\/pipenv-pipfile.*/
+      - release:
+          name: Release
+          context: nodejs-lib-release
+          filters:
+            branches:
+              only:
+                - master
