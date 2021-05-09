@@ -3,59 +3,99 @@ orbs:
   snyk: snyk/snyk@0.0.8
 
 commands:
-  checkout_and_restore_cache:
+  checkout_and_install:
     steps:
       - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
+      - run: npm install --no-package-lock
   lerna_bootstrap:
     steps:
       - run:
-          name: Lerna bootstrap
-          command: |
-            ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
+          name: lerna bootstrap
+          command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
   run_lerna_test:
     steps:
       - run:
           name: npm test
           command: npm run test:ci
-  run_test:
+  run_generic_test:
     parameters:
       package-name:
         type: string
     steps:
       - run:
-          name: Run tests
+          name: lerna run test --scope << parameters.package-name >> --stream
+          command: ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
+  run_test-pipenv-pipfile:
+    parameters:
+      python_version:
+        type: string
+      pipenv_version:
+        type: string
+    steps:
+      - run:
+          name: pyenv install << parameters.python_version >>
           command: |
-            ./node_modules/.bin/lerna run test --scope << parameters.package-name >>
-
+            apt -qq update
+            apt -qq install python3-pip python-pip -y &> /dev/null
+            curl https://pyenv.run | $SHELL
+            export PATH="/root/.pyenv/bin:$PATH"
+            eval "$(pyenv init -)"
+            eval "$(pyenv virtualenv-init -)"
+            pyenv -v
+            export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
+            # Install the specific release of Python if it isn't already installed
+            pyenv install -s $PYTHON_VERSION_LATEST
+            # Required for a specific test
+            pyenv install -s 3.8.1
+            pyenv sh-shell $PYTHON_VERSION_LATEST
+            python --version
+            export LANG="en_US.UTF-8"
+            export LC_CTYPE="en_US.UTF-8"
+            export PATH=$HOME/.local/bin:$PATH
+            python -m pip install --user pipenv===$PIPENV_VER
+            export PATH="$PATH:$HOME/.local/bin"
+            python -m pipenv --version
+          environment:
+            PYTHON_VERSION: << parameters.python_version >>
+            PIPENV_VER: << parameters.pipenv_version >>
+      - run_generic_test:
+          package-name: "@snyk-fix/pipenv-pipfile"
 jobs:
   build-test:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10
     steps:
-      - checkout_and_restore_cache
-      - run: npm install
+      - checkout_and_install
       - lerna_bootstrap
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
-            - node_modules
+            - ./node_modules
       - run_lerna_test
-  test_pip-requirements:
+  admon:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:10
+    steps:
+      - run: echo 1
+  test_pipenv-pipfile:
     parameters:
-      pip_version:
+      node_version:
         type: string
       python_version:
         type: string
+      pipenv_version:
+        type: string
+    docker:
+      - image: node:<< parameters.node_version >>
     steps:
-      - checkout_and_restore_cache
+      - checkout_and_install
       - lerna_bootstrap
-      - run_test:
-          package-name: "@snyk-fix/pip-requirements"
+      - run_test-pipenv-pipfile:
+          python_version: << parameters.python_version >>
+          pipenv_version: << parameters.pipenv_version >>
 workflows:
   version: 2
   build-test:
@@ -67,14 +107,27 @@ workflows:
               ignore:
                 - master
                 - /pull\/[0-9]+/
-      - test_pip-requirements:
+      - test_pipenv-pipfile:
+          name: Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              pip_version: [ '1','2' ]
-              python_version: [ '3','4' ]
+              node_version: ['10']
+              pipenv_version: ['2020.11.4']
+              python_version: ['3.9']
           filters:
             branches:
               ignore: /.*/
             tags:
               only:
-                - /test_@snyk-fix\/pip-requirements.*/
+                - /test_@snyk-fix\/pipenv-pipfile.*/
+      - admon:
+          requires:
+            - build-test
+            - test_pipenv-pipfile
+#      - release:
+#          name: Release
+#          context: nodejs-lib-release
+#          filters:
+#            branches:
+#              only:
+#                - master
