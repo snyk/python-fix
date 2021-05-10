@@ -1,7 +1,7 @@
 const child_process = require('child_process');
 
 async function main() {
-  if (!process.env.CIRCLE_PULL_REQUEST) {
+  if (!process.env.CIRCLE_SHA1) {
     console.error('This script can only run from circle ci');
     process.exit(1);
   }
