@@ -23,9 +23,9 @@ async function main() {
     pkgsWithMatrix.includes(pkgName),
   );
 
-  const pr = process.env.CIRCLE_PULL_REQUEST.split('/').pop();
+  const sha1 = process.env.CIRCLE_SHA1;
   for (const pkg of pkgsToTestWithDifferentEnvs) {
-    run(`git tag -f test_${pkg}_pr${pr}`);
+    run(`git tag -f test_${pkg}_${sha1}`);
   }
   run(
     `git push "https://git:$GH_TOKEN@github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME" --tag`,
