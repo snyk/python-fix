@@ -27,7 +27,9 @@ commands:
     steps:
       - run:
           name: lerna run test --scope << parameters.package-name >> --stream
-          command: ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
+          command: |
+            source $BASH_ENV
+            ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
   run_test-pipenv-pipfile:
     parameters:
       python_version:
@@ -41,9 +43,10 @@ commands:
             apt -qq update
             apt -qq install python3-pip python-pip -y &> /dev/null
             curl https://pyenv.run | $SHELL
-            export PATH="/root/.pyenv/bin:$PATH"
-            eval "$(pyenv init -)"
-            eval "$(pyenv virtualenv-init -)"
+            echo 'export PATH="/root/.pyenv/bin:$PATH"' >> $BASH_ENV
+            echo 'eval "$(pyenv init -)"' >> $BASH_ENV
+            echo 'eval "$(pyenv virtualenv-init -)"' >> $BASH_ENV
+            source $BASH_ENV
             pyenv -v
             export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
             # Install the specific release of Python if it isn't already installed
@@ -52,11 +55,13 @@ commands:
             pyenv install -s 3.8.1
             pyenv sh-shell $PYTHON_VERSION_LATEST
             python --version
-            export LANG="en_US.UTF-8"
-            export LC_CTYPE="en_US.UTF-8"
-            export PATH=$HOME/.local/bin:$PATH
+            echo 'export LANG="en_US.UTF-8"' >> $BASH_ENV
+            echo 'export LC_CTYPE="en_US.UTF-8"' >> $BASH_ENV
+            echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
+            source $BASH_ENV
             python -m pip install --user pipenv===$PIPENV_VER
-            export PATH="$PATH:$HOME/.local/bin"
+            echo 'export PATH="$PATH:$HOME/.local/bin"' >> $BASH_ENV
+            source $BASH_ENV
             python -m pipenv --version
           environment:
             PYTHON_VERSION: << parameters.python_version >>
