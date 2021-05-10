@@ -108,7 +108,7 @@ workflows:
   build-test:
     jobs:
       - build-test:
-          context: nodejs-lib-release
+          context: SNYK
           filters:
             branches:
               ignore:
@@ -129,7 +129,7 @@ workflows:
                 - /test_@snyk-fix\/pipenv-pipfile.*/
       - release:
           name: Release
-          context: nodejs-lib-release
+          context: SNYK
           filters:
             branches:
               only:
