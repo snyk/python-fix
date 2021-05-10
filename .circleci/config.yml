@@ -82,8 +82,8 @@ jobs:
       - checkout_and_install
       - lerna_bootstrap
       - run:
-          name: lerna publish --ignore-scripts
-          command: ./node_modules/.bin/lerna publish
+          name: lerna publish --ignore-scripts --yes
+          command: ./node_modules/.bin/lerna publish --yes
   test_pipenv-pipfile:
     parameters:
       node_version:
