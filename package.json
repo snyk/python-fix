@@ -1,0 +1,15 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write '{''packages/*/{lib,src,test}/!(fixtures)/**/*,*}.{js,ts,yml}'",
+    "test:ci": "node run_test.js"
+  },
+  "devDependencies": {
+    "eslint": "7.25.0",
+    "@typescript-eslint/parser": "^4.22.1",
+    "eslint-config-prettier": "8.3.0",
+    "lerna": "^4.0.0",
+    "prettier": "^1.19.1"
+  }
+}
