@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/snyk-tech-services/Python Fix/compare/@snyk-fix/pipenv-pipfile@0.1.1...@snyk-fix/pipenv-pipfile@0.2.0) (2021-05-10)
+
+
+### Features
+
+* rename file, feat to release ([ee07542](https://github.com/snyk-tech-services/Python Fix/commit/ee0754277f90d0e2a0de9fc25e4e6353337f15d1))
+
+
+
+
+
 ## [0.1.1](https://github.com/snyk-tech-services/Python Fix/compare/@snyk-fix/pipenv-pipfile@0.1.0...@snyk-fix/pipenv-pipfile@0.1.1) (2021-05-10)
 
 
