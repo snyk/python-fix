@@ -109,7 +109,7 @@ workflows:
           filters:
             branches:
               ignore:
-                - master
+                - main
                 - /pull\/[0-9]+/
       - test_pipenv-pipfile:
           name: Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
@@ -130,4 +130,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
