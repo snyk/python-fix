@@ -84,9 +84,10 @@ jobs:
       - run:
           name: lerna publish --ignore-scripts --yes
           command: |
+            echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
             git config --global user.email "lili@snyk.io"
             git config --global user.name "Lili Kastilio"
-            ./node_modules/.bin/lerna publish --yes
+            ./node_modules/.bin/lerna publish --ignore-scripts --yes
   test_pipenv-pipfile:
     parameters:
       node_version:
@@ -108,7 +109,7 @@ workflows:
   build-test:
     jobs:
       - build-test:
-          context: SNYK
+          context: nodejs-lib-release
           filters:
             branches:
               ignore:
@@ -129,7 +130,7 @@ workflows:
                 - /test_@snyk-fix\/pipenv-pipfile.*/
       - release:
           name: Release
-          context: SNYK
+          context: nodejs-lib-release
           filters:
             branches:
               only:
