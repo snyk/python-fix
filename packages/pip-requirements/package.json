@@ -1,5 +1,5 @@
 {
-  "name": "@snyk-fix/pip-requirements",
+  "name": "@snyk/fix-pip-requirements",
   "description": "Apply issue fixes to requirements files managed with pip",
   "version": "0.1.0",
   "main": "dist/index.js",

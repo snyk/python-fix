@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.2.2](https://github.com/snyk-tech-services/Python Fix/compare/@snyk-fix/pipenv-pipfile@0.2.0...@snyk-fix/pipenv-pipfile@0.2.2) (2021-05-11)
+## [0.2.2](https://github.com/snyk-tech-services/Python Fix/compare/@snyk/fix-pipenv-pipfile@0.2.0...@snyk/fix-pipenv-pipfile@0.2.2) (2021-05-11)
 
 
 ### Bug Fixes
@@ -14,7 +14,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.2.1](https://github.com/snyk-tech-services/Python Fix/compare/@snyk-fix/pipenv-pipfile@0.2.0...@snyk-fix/pipenv-pipfile@0.2.1) (2021-05-11)
+## [0.2.1](https://github.com/snyk-tech-services/Python Fix/compare/@snyk/fix-pipenv-pipfile@0.2.0...@snyk/fix-pipenv-pipfile@0.2.1) (2021-05-11)
 
 
 ### Bug Fixes
@@ -25,7 +25,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-# [0.2.0](https://github.com/snyk-tech-services/Python Fix/compare/@snyk-fix/pipenv-pipfile@0.1.1...@snyk-fix/pipenv-pipfile@0.2.0) (2021-05-10)
+# [0.2.0](https://github.com/snyk-tech-services/Python Fix/compare/@snyk/fix-pipenv-pipfile@0.1.1...@snyk/fix-pipenv-pipfile@0.2.0) (2021-05-10)
 
 
 ### Features
@@ -36,7 +36,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.1.1](https://github.com/snyk-tech-services/Python Fix/compare/@snyk-fix/pipenv-pipfile@0.1.0...@snyk-fix/pipenv-pipfile@0.1.1) (2021-05-10)
+## [0.1.1](https://github.com/snyk-tech-services/Python Fix/compare/@snyk/fix-pipenv-pipfile@0.1.0...@snyk/fix-pipenv-pipfile@0.1.1) (2021-05-10)
 
 
 ### Bug Fixes
