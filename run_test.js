@@ -8,7 +8,9 @@ async function main() {
   const pkgsWithMatrix = ['@snyk/fix-pipenv-pipfile'];
 
   // list of changed packages (their names, not their folder names)
-  const changedPackages = run(`lerna changed --loglevel error`).split('\n');
+  const changedPackages = JSON.parse(
+    run(`lerna changed --loglevel error --json || echo []`),
+  ).map(pkg => pkg.name);
 
   if (changedPackages.length === 0) {
     console.log('No packages to test');
@@ -27,9 +29,7 @@ async function main() {
   for (const pkg of pkgsToTestWithDifferentEnvs) {
     run(`git tag -f test_${pkg}_${sha1}`);
   }
-  run(
-    `git push "https://git:$GH_TOKEN@github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME" --tag`,
-  );
+  run(`git push --tag`);
 
   const whitelist = pkgsToTestWithLerna
     .map((pkgName) => `--scope ${pkgName}`)
@@ -37,20 +37,17 @@ async function main() {
   run(`lerna run test ${whitelist} --stream`);
 }
 
-main();
+main().catch((err) => {
+  console.error(err.message);
+  process.exit(1);
+});
 
 function run(cmd) {
-  try {
-    const result = child_process
-      .execSync(cmd)
-      .toString()
-      .trim();
-    console.log(`Result of "${cmd}";`);
-    console.log(result);
-    return result;
-  } catch (e) {
-    console.log(`Error running "${cmd}"`);
-    console.log(JSON.stringify(e));
-    throw e;
-  }
+  console.log(`Running "${cmd}":`);
+  const result = child_process
+    .execSync(cmd, { encoding: 'utf-8' })
+    .toString()
+    .trim();
+  console.log(result);
+  return result;
 }
