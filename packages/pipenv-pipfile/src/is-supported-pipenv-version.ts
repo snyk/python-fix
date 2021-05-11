@@ -2,6 +2,7 @@ export function isPipenvSupportedVersion(
   version: string,
 ): { supported: boolean; versions: string[] } {
   // See all versions: https://pipenv.pypa.io/en/latest/changelog/
+  // Update SUPPORTED.md when this is updated
   const SUPPORTED_PIPENV_VERSIONS = [
     '2020.11.4',
     '2020.8.13',
