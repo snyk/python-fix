@@ -14,7 +14,7 @@ const limiter = new Bottleneck({
 });
 
 // https://pipenv.pypa.io/en/latest/advanced/#changing-default-python-versions
-function getpythonArgs(config: PipEnvConfig): string[] | void {
+function getPythonArgs(config: PipEnvConfig): string[] | void {
   if (config.python) {
     return ['--python', config.python]; // Performs the installation in a virtualenv using the provided Python interpreter.
   }
@@ -26,7 +26,7 @@ async function runPipenvInstall(
 ): Promise<ExecuteResponse> {
   const args = ['install', ...requirements];
 
-  const pythonArg = getpythonArgs(config);
+  const pythonArg = getPythonArgs(config);
   if (pythonArg) {
     args.push(...pythonArg);
   }
