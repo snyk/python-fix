@@ -1,5 +1,5 @@
 # Support Matrix
-This plugin has been tested with Python latest minor versions of `3.9`, `3.8`, `3.7`, `3.6`, `2.7` and the following `pipenv` versions:
+This plugin has been tested with Python `latest patch` versions of `3.9`, `3.8`, `3.7`, `3.6`, `2.7` and the following `pipenv` versions:
 - `2020.11.4`
 - `2020.8.13`
 - `2020.6.2`
