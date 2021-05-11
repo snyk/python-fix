@@ -1,5 +1,5 @@
 {
-  "name": "@snyk-fix/pipenv-pipfile",
+  "name": "@snyk/fix-pipenv-pipfile",
   "description": "Snyk python ecosystem fix remediation",
   "version": "0.2.2",
   "main": "dist/index.js",

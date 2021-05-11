@@ -36,7 +36,7 @@ commands:
         type: string
     steps:
       - run:
-          name: pyenv install << parameters.python_version >> && lerna run test --scope @snyk-fix/pipenv-pipfile --stream
+          name: pyenv install << parameters.python_version >> && lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           command: |
             apt -qq update
             apt -qq install python3-pip python-pip -y &> /dev/null
@@ -59,7 +59,7 @@ commands:
             export PATH="$PATH:$HOME/.local/bin"
             python -m pipenv --version
             # Run node tests
-            ./node_modules/.bin/lerna run test --scope @snyk-fix/pipenv-pipfile --stream
+            ./node_modules/.bin/lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           environment:
             PYTHON_VERSION: << parameters.python_version >>
             PIPENV_VER: << parameters.pipenv_version >>
