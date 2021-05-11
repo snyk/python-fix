@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.2](https://github.com/snyk-tech-services/Python Fix/compare/@snyk-fix/pipenv-pipfile@0.2.0...@snyk-fix/pipenv-pipfile@0.2.2) (2021-05-11)
+
+
+### Bug Fixes
+
+* fix naming for getPythonArgs ([59b1b8d](https://github.com/snyk-tech-services/Python Fix/commit/59b1b8d80f5a7a03b73fae81f0763e12173648bd))
+
+
+
+
+
 ## [0.2.1](https://github.com/snyk-tech-services/Python Fix/compare/@snyk-fix/pipenv-pipfile@0.2.0...@snyk-fix/pipenv-pipfile@0.2.1) (2021-05-11)
 
 
