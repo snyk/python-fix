@@ -7,3 +7,5 @@ dist
 *.log
 .eslintcache
 .idea
+package-lock.json
+tsconfig.tsbuildinfo
