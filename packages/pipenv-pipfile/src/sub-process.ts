@@ -71,7 +71,8 @@ export async function execute(
     });
   } finally {
     if (processId) {
-      // Additional anti-zombie protection. Process here should be already stopped.
+      // Additional anti-zombie protection.
+      // Process here should be already stopped.
       try {
         process.kill(processId, 'SIGKILL');
       } catch (e) {
