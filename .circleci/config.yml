@@ -14,7 +14,7 @@ commands:
     steps:
       - run:
           name: lerna bootstrap
-          command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
+          command: ./node_modules/.bin/lerna bootstrap --no-ci
   run_lerna_tests:
     steps:
       - run:
@@ -82,12 +82,12 @@ jobs:
       - checkout_and_install
       - lerna_bootstrap
       - run:
-          name: lerna publish --ignore-scripts --yes
+          name: lerna publish --yes
           command: |
             echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
             git config --global user.email "circleci@snyk.io"
             git config --global user.name "CircleCI"
-            ./node_modules/.bin/lerna publish --ignore-scripts --yes
+            ./node_modules/.bin/lerna publish --yes
   test_pipenv-pipfile:
     parameters:
       node_version:
