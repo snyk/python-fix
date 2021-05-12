@@ -31,10 +31,10 @@ async function main() {
   }
   run(`git push --tag`);
 
-  const whitelist = pkgsToTestWithLerna
-    .map((pkgName) => `--scope ${pkgName}`)
-    .join(' ');
-  run(`lerna run test ${whitelist} --stream`);
+  // const whitelist = pkgsToTestWithLerna
+  //   .map((pkgName) => `--scope ${pkgName}`)
+  //   .join(' ');
+  // run(`lerna run test ${whitelist} --stream`);
 }
 
 main().catch((err) => {
