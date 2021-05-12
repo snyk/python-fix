@@ -6,7 +6,10 @@
   "command": {
     "publish": {
       "conventionalCommits": true,
-      "message": "[skip ci] Publish"
+      "message": "chore: Publish lerna commit [skip ci]"
     }
+  },
+  "bootstrap": {
+    "npmClientArgs": ["--no-package-lock"]
   }
 }
