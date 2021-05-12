@@ -1,4 +1,4 @@
-import { isPipenvSupportedVersion } from '../../src/is-pipenv-supported-version';
+import { isPipenvSupportedVersion } from '../../src/is-supported-pipenv-version';
 
 describe('extractPipenvVersion', () => {
   it('2018.11.26 is supported', async () => {
