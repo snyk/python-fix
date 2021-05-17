@@ -80,7 +80,7 @@ describe('pipenvInstall', () => {
     const lockFile = 'with-django-upgrade/Pipfile.lock';
     // backup original files
     backupFiles(workspacesPath, [targetFile, lockFile]);
-    const packagesToInstall = ['django==2.0.1'];
+    const packagesToInstall = ['django==2.0.2'];
     const config = {
       python: '3.8.1',
     };
@@ -91,11 +91,11 @@ describe('pipenvInstall', () => {
     // Assert
     // expect the updated file to match exactly expected file
     expect(res).toEqual({
-      command: 'pipenv install django==2.0.1 --python 3.8.1',
+      command: 'pipenv install django==2.0.2 --python 3.8.1',
       duration: expect.any(Number),
       exitCode: 0,
       stderr: expect.stringContaining('Adding django'),
-      stdout: expect.stringContaining('Installing django==2.0.1'),
+      stdout: expect.stringContaining('Installing django==2.0.2'),
     });
     const fixedFileContent = fs.readFileSync(
       pathLib.join(workspacesPath, targetFile),
@@ -116,7 +116,7 @@ describe('pipenvInstall', () => {
     const pipfileLockJson = JSON.parse(fixedLockfileContent);
 
     // lockfile still has original version
-    expect(pipfileLockJson.default.django.version).toEqual('==2.0.1');
+    expect(pipfileLockJson.default.django.version).toEqual('==2.0.2');
 
     // restore original files
     restoreFiles(workspacesPath, [targetFile, lockFile]);
