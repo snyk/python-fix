@@ -15,9 +15,14 @@ const limiter = new Bottleneck({
 
 // https://pipenv.pypa.io/en/latest/advanced/#changing-default-python-versions
 function getPythonArgs(config: PipEnvConfig): string[] | void {
+  const args = [];
   if (config.python) {
-    return ['--python', config.python]; // Performs the installation in a virtualenv using the provided Python interpreter.
+    args.push('--python', config.python); // Performs the installation in a virtualenv using the provided Python interpreter.
   }
+  if (process.env.PIPENV_SKIP_LOCK) {
+    args.push('--skip-lock');
+  }
+  return args;
 }
 async function runPipenvInstall(
   projectPath: string,
@@ -34,7 +39,9 @@ async function runPipenvInstall(
   let res: ExecuteResponse;
 
   try {
-    res = await execute('pipenv', args, { cwd: projectPath });
+    res = await execute('pipenv', args, {
+      cwd: projectPath,
+    });
   } catch (e) {
     debug('Execute failed with', e);
     res = e;
@@ -43,4 +50,3 @@ async function runPipenvInstall(
   return res;
 }
 export const pipenvInstall = limiter.wrap(runPipenvInstall);
-
