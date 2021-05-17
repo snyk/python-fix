@@ -34,7 +34,9 @@ async function runPipenvInstall(
   let res: ExecuteResponse;
 
   try {
-    res = await execute('pipenv', args, { cwd: projectPath });
+    res = await execute('pipenv', args, {
+      cwd: projectPath,
+    });
   } catch (e) {
     debug('Execute failed with', e);
     res = e;
@@ -43,4 +45,3 @@ async function runPipenvInstall(
   return res;
 }
 export const pipenvInstall = limiter.wrap(runPipenvInstall);
-

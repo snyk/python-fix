@@ -19,12 +19,24 @@ function restoreFiles(root: string, files: string[]): void {
 describe('pipenvInstall', () => {
   let filesToDelete: string[] = [];
   const workspacesPath = pathLib.resolve(__dirname, 'workspaces');
+  const OLD_ENV = process.env;
 
   afterEach(() => {
     filesToDelete.map((f) => fs.unlinkSync(f));
   });
 
-  // TODO: can dev-deps actually be updated/scanned via CLI today?
+  afterEach(() => {
+    filesToDelete.map((f) => fs.unlinkSync(f));
+  });
+
+  afterAll(() => {
+    process.env = OLD_ENV; // Restore old environment
+  });
+
+  beforeEach(() => {
+    process.env = { ...OLD_ENV }; // Make a copy
+  });
+
   it('applies expected changes to Pipfile when locking fails', async () => {
     // Arrange
     const targetFile = 'with-dev-deps/Pipfile';
@@ -80,7 +92,7 @@ describe('pipenvInstall', () => {
     const lockFile = 'with-django-upgrade/Pipfile.lock';
     // backup original files
     backupFiles(workspacesPath, [targetFile, lockFile]);
-    const packagesToInstall = ['django==2.0.1'];
+    const packagesToInstall = ['django==2.0.2'];
     const config = {
       python: '3.8.1',
     };
@@ -91,11 +103,11 @@ describe('pipenvInstall', () => {
     // Assert
     // expect the updated file to match exactly expected file
     expect(res).toEqual({
-      command: 'pipenv install django==2.0.1 --python 3.8.1',
+      command: 'pipenv install django==2.0.2 --python 3.8.1',
       duration: expect.any(Number),
       exitCode: 0,
       stderr: expect.stringContaining('Adding django'),
-      stdout: expect.stringContaining('Installing django==2.0.1'),
+      stdout: expect.stringContaining('Installing django==2.0.2'),
     });
     const fixedFileContent = fs.readFileSync(
       pathLib.join(workspacesPath, targetFile),
@@ -116,7 +128,7 @@ describe('pipenvInstall', () => {
     const pipfileLockJson = JSON.parse(fixedLockfileContent);
 
     // lockfile still has original version
-    expect(pipfileLockJson.default.django.version).toEqual('==2.0.1');
+    expect(pipfileLockJson.default.django.version).toEqual('==2.0.2');
 
     // restore original files
     restoreFiles(workspacesPath, [targetFile, lockFile]);
@@ -186,5 +198,56 @@ describe('pipenvInstall', () => {
     ];
   }, 90000);
 
+  it('does not create a lockfile', async () => {
+    // Arrange
+    process.env.PIPENV_SKIP_LOCK = 'true';
+    const targetFile = 'no-lockfile/Pipfile';
+    const expectedTargetFile = 'no-lockfile/expected-Pipfile';
+
+    // backup original files
+    backupFiles(workspacesPath, [targetFile]);
+    const packagesToInstall = ['django==2.0.2'];
+    const config = {
+      python: '3.8.1',
+    };
+    // Act
+    const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
+    const res = await pipenvInstall(dir, packagesToInstall, config);
+
+    // Assert
+    // expect the updated file to match exactly expected file
+    expect(res).toEqual({
+      command: 'pipenv install django==2.0.2 --python 3.8.1',
+      duration: expect.any(Number),
+      exitCode: 0,
+      stderr: expect.stringContaining('Adding django'),
+      stdout: expect.stringContaining('Installing django==2.0.2'),
+    });
+    const fixedFileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, targetFile),
+      'utf-8',
+    );
+    const expectedPipfileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, expectedTargetFile),
+      'utf-8',
+    );
+    expect(fixedFileContent).toEqual(expectedPipfileContent);
+
+    // verify there is no lockfile created
+    const lockFile = 'no-lockfile/Pipfile.lock';
+    let lockfileContent;
+    try {
+      lockfileContent = fs.readFileSync(
+        pathLib.join(workspacesPath, lockFile),
+        'utf-8',
+      );
+    } catch (e) {
+      expect(e.message).toMatch('no such file or directory');
+    }
+    expect(lockfileContent).toBeUndefined();
+    // restore original files
+    restoreFiles(workspacesPath, [targetFile]);
+    filesToDelete = [pathLib.join(workspacesPath, 'no-lockfile/Pipfile.orig')];
+  }, 90000);
   it.todo('With a dev dep that needs updating');
 });
