@@ -1,5 +1,4 @@
 import { spawn, SpawnOptions } from 'child_process';
-
 export interface ExecuteResponse {
   exitCode: number | null;
   stderr: string;
@@ -18,26 +17,27 @@ export async function execute(
   options: { cwd?: string },
 ): Promise<ExecuteResponse> {
   const spawnOptions: SpawnOptions = {
-    shell: true,
     detached: true, // do not send signals to child processes
+    cwd: options?.cwd ?? undefined,
+    env: {
+      ...process.env,
+      PIPENV_SKIP_LOCK: 'true',
+    }
   };
-  if (options && options.cwd) {
-    spawnOptions.cwd = options.cwd;
-  }
   const fullCommand = `${command} ${args.join(' ')}`;
   const startTime = Date.now();
   let processId;
   try {
-    const worker = spawn(command, args, options);
+    const worker = spawn(command, args, spawnOptions);
     processId = worker.pid;
     return await new Promise((resolve, reject) => {
       let stderr = '';
       let stdout = '';
 
-      worker.stdout.on('data', (data) => {
+      worker.stdout?.on('data', (data) => {
         stdout += data;
       });
-      worker.stderr.on('data', (data) => {
+      worker.stderr?.on('data', (data) => {
         stderr += data;
       });
       worker.on('error', (e) => {
