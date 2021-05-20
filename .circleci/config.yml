@@ -102,6 +102,15 @@ jobs:
       - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
+  test_pip-requirements:
+    parameters:
+      node_version:
+        type: string
+    docker:
+      - image: node:<< parameters.node_version >>
+    steps:
+      - run_generic_test:
+          package-name: "@snyk/fix-pipenv-pipfile"
 workflows:
   version: 2
   build-test:
@@ -114,7 +123,7 @@ workflows:
                 - main
                 - /pull\/[0-9]+/
       - test_pipenv-pipfile:
-          name: Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
+          name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
               node_version: [ '10', '12', '14' ]
@@ -128,6 +137,17 @@ workflows:
             tags:
               only:
                 - /test_@snyk\/fix-pipenv-pipfile.*/
+      - test_pip-requirements:
+          name: Package pip-requirements | Node.js << matrix.node_version >>
+          matrix:
+            parameters:
+              node_version: [ '10', '12', '14' ]
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+                - /test_@snyk\/fix-pip-requirements.*/
       - release:
           name: Release
           context: nodejs-lib-release
