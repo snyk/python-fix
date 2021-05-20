@@ -13,6 +13,9 @@
 	"engines": {
 		"node": ">=10"
 	},
+  "scripts": {
+    "test": "jest"
+  },
 	"files": [
 		"bin",
 		"dist"

@@ -17,6 +17,9 @@
 		"bin",
 		"dist"
 	],
+  "scripts": {
+    "test": "jest"
+  },
 	"homepage": "https://github.com/snyk-tech-services/python-fix#readme",
 	"dependencies": {
 		"bottleneck": "2.19.5",
