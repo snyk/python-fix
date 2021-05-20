@@ -5,7 +5,7 @@ async function main() {
     console.error('This script can only run from circle ci');
     process.exit(1);
   }
-  const pkgsWithMatrix = ['@snyk/fix-pipenv-pipfile', '@snyk/fix-pip-requirements'];
+  const pkgsWithMatrix = ['@snyk/fix-pipenv-pipfile', '@snyk/fix-pip-requirements', '@snyk/child-process'];
 
   // list of changed packages (their names, not their folder names)
   const changedPackages = JSON.parse(
@@ -17,7 +17,7 @@ async function main() {
     return;
   }
 
-  console.log(`Running tests on: ${changedPackages.join()}`);
+  console.log(`Running tests on: ${changedPackages.join(', ')}`);
   const pkgsToTestWithDifferentEnvs = changedPackages.filter((pkgName) =>
     pkgsWithMatrix.includes(pkgName),
   );
