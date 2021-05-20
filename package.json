@@ -2,7 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "format": "prettier --write '{''packages/*/{lib,src,test}/!(fixtures)/**/*,*}.{js,ts,yml}'",
+    "lint": "prettier --check '{''packages/*/{lib,src,test}/!(fixtures)/**/*,*}.{js,ts,yml}'",
     "test:ci": "node run_test.js"
   },
   "devDependencies": {
