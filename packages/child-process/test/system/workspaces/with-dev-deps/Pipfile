@@ -1,0 +1,12 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+dateparser = '==0.7.6'
+
+[packages]
+ipaddress = '*'
+Jinja2 = "==2.11.0"
+transitive = "==1.1.1"
