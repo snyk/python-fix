@@ -17,9 +17,14 @@
 		"bin",
 		"dist"
 	],
-  "scripts": {
-    "test": "jest"
-  },
+	"scripts": {
+		"format": "prettier --write '{''{lib,src,test}/!(fixtures)/**/*,*}.{js,ts,yml}'",
+		"build": "tsc",
+		"test": "npm run lint && jest",
+		"format:check": "prettier --check '{''{lib,test}/!(test/**/fixtures)/**/*,*}.{js,ts,json,yml}'",
+		"lint": "npm run format:check && npm run lint:eslint",
+		"lint:eslint": "eslint --cache '{lib,test}/**/*.ts'"
+	},
 	"homepage": "https://github.com/snyk-tech-services/python-fix#readme",
 	"dependencies": {
 		"bottleneck": "2.19.5",
@@ -31,9 +36,9 @@
 		"@types/debug": "4.1.5",
 		"@types/jest": "25.2.3",
 		"@types/node": "12.20.10",
-    "@typescript-eslint/eslint-plugin": "4.24.0",
+		"@typescript-eslint/eslint-plugin": "4.24.0",
 		"@typescript-eslint/parser": "4.24.0",
-    "eslint": "5.14",
+		"eslint": "5.14",
 		"eslint-config-prettier": "^6.10.0",
 		"jest": "^25.1.0",
 		"prettier": "^1.19.1",

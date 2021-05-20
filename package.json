@@ -2,7 +2,6 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "format": "prettier --write '{''packages/*/{lib,src,test}/!(fixtures)/**/*,*}.{js,ts,yml}'",
     "test:ci": "node run_test.js"
   },
   "devDependencies": {
@@ -10,6 +9,7 @@
     "@typescript-eslint/parser": "^4.24.0",
     "eslint-config-prettier": "8.3.0",
     "lerna": "^4.0.0",
-    "prettier": "^1.19.1"
+    "prettier": "^1.19.1",
+    "@types/jest": "25.2.3"
   }
 }
