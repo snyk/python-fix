@@ -6,7 +6,7 @@
 	"types": "./dist/index.d.ts",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/snyk-tech-services/Python Fix"
+		"url": "https://github.com/snyk-tech-services/python-fix"
 	},
 	"author": "Snyk Tech Services",
 	"license": "Apache-2.0",
@@ -17,7 +17,7 @@
 		"bin",
 		"dist"
 	],
-	"homepage": "https://github.com/snyk-tech-services/Python Fix#readme",
+	"homepage": "https://github.com/snyk-tech-services/python-fix#readme",
 	"dependencies": {
 		"debug": "^4.1.1",
 		"source-map-support": "^0.5.16",
