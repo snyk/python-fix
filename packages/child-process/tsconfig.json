@@ -5,6 +5,14 @@
     "rootDir": "./src"
   },
   "include": [
-    "./src/**/*"
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules/*"
+  ],
+  "types": [
+    "node",
+    "jest"
   ],
 }

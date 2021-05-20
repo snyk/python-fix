@@ -7,9 +7,9 @@ describe('execute', () => {
     filesToDelete.map((f) => fs.unlinkSync(f));
   });
   it('returns all data when command succeeds', async () => {
-    const res = await execute('pipenv', ['--version'], {});
+    const res = await execute('node', ['--version'], {});
     expect(res).toEqual({
-      command: 'pipenv --version',
+      command: 'node --version',
       duration: expect.any(Number),
       exitCode: 0,
       stderr: '',
