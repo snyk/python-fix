@@ -115,6 +115,16 @@ jobs:
       - checkout_and_install
       - run_generic_test:
           package-name: "@snyk/fix-pip-requirements"
+  test_child-process:
+    parameters:
+      node_version:
+        type: string
+    docker:
+      - image: node:<< parameters.node_version >>
+    steps:
+      - checkout_and_install
+      - run_generic_test:
+          package-name: "@snyk/child-process"
 workflows:
   version: 2
   build-test:
