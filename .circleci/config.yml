@@ -9,9 +9,6 @@ commands:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
-      - run: npm install --no-package-lock
-  lerna_bootstrap:
-    steps:
       - run:
           name: lerna bootstrap
           command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
@@ -72,7 +69,6 @@ jobs:
       - image: circleci/node:14
     steps:
       - checkout_and_install
-      - lerna_bootstrap
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}
           paths:
@@ -83,7 +79,6 @@ jobs:
       - image: circleci/node:14
     steps:
       - checkout_and_install
-      - lerna_bootstrap
       - run:
           name: lerna run build build && lerna publish --ignore-scripts --yes
           command: |
@@ -104,7 +99,6 @@ jobs:
       - image: node:<< parameters.node_version >>
     steps:
       - checkout_and_install
-      - lerna_bootstrap
       - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
