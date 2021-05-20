@@ -18,8 +18,11 @@ commands:
   run_lerna_tests:
     steps:
       - run:
-          name: npm run test:ci
-          command: npm run test:ci
+          name: lerna run lint
+          command: ./node_modules/.bin/lerna run lint
+      - run:
+          name: lerna run test:ci
+          command: ./node_modules/.bin/lerna run test:ci
   run_generic_test:
     parameters:
       package-name:
