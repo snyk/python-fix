@@ -134,6 +134,7 @@ workflows:
           matrix:
             parameters:
               node_version: [ '10', '12', '14' ]
+              package-name: [ '@snyk/child-process' ]
           filters:
             branches:
               ignore: /.*/
