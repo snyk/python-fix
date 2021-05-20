@@ -40,8 +40,8 @@
     "tslib": "^1.10.0"
   },
   "devDependencies": {
-    "@types/jest": "25.2.3",
-    "@types/node": "12.20.10",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.3.1",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
     "@typescript-eslint/parser": "^4.22.1",
     "eslint": "5.14",
