@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/snyk-tech-services/Python Fix/compare/@snyk/fix-pip-requirements@0.2.2...@snyk/fix-pip-requirements@0.2.3) (2021-05-20)
+
+
+### Bug Fixes
+
+* node engines should be 10+ ([ecc93d1](https://github.com/snyk-tech-services/Python Fix/commit/ecc93d1fb4aea5e8c719801c4ef54a80b0b86548))
+
+
+
+
+
 ## [0.2.2](https://github.com/snyk-tech-services/Python Fix/compare/@snyk/fix-pip-requirements@0.2.1...@snyk/fix-pip-requirements@0.2.2) (2021-05-12)
 
 
