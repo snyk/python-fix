@@ -10,6 +10,9 @@ commands:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
       - run:
+          name: install lerna
+          command: npm install lerna@4.0.0
+      - run:
           name: lerna bootstrap
           command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
   run_lerna_tests:
@@ -18,8 +21,8 @@ commands:
           name: lerna run lint
           command: ./node_modules/.bin/lerna run lint
       - run:
-          name: lerna run test:ci
-          command: ./node_modules/.bin/lerna run test:ci
+          name: npm run test:ci
+          command: npm run test:ci
   run_generic_test:
     parameters:
       package-name:
@@ -109,6 +112,7 @@ jobs:
     docker:
       - image: node:<< parameters.node_version >>
     steps:
+      - checkout_and_install
       - run_generic_test:
           package-name: "@snyk/fix-pipenv-pipfile"
 workflows:
