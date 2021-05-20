@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/snyk-tech-services/Python Fix/compare/@snyk/fix-pipenv-pipfile@0.3.5...@snyk/fix-pipenv-pipfile@0.4.0) (2021-05-20)
+
+
+### Features
+
+* fix options & ensure env vars respected ([6a01fb6](https://github.com/snyk-tech-services/Python Fix/commit/6a01fb6ba4eacd57446969c8ecdc090383e77db5))
+
+
+
+
+
 ## [0.3.5](https://github.com/snyk-tech-services/Python Fix/compare/@snyk/fix-pipenv-pipfile@0.3.4...@snyk/fix-pipenv-pipfile@0.3.5) (2021-05-18)
 
 
