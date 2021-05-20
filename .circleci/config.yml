@@ -89,19 +89,6 @@ jobs:
             git config --global user.name "CircleCI"
             ./node_modules/.bin/lerna run build
             ./node_modules/.bin/lerna publish --ignore-scripts --yes
-  test_child-process:
-    parameters:
-      node_version:
-        type: string
-      package-name:
-        type: string
-    docker:
-      - image: node:<< parameters.node_version >>
-    steps:
-      - checkout_and_install
-      - lerna_bootstrap
-      - run_generic_test:
-          package-name: << parameters.package-name >>
   test_pipenv-pipfile:
     parameters:
       node_version:
@@ -129,17 +116,6 @@ workflows:
               ignore:
                 - main
                 - /pull\/[0-9]+/
-      - test_child-process:
-          name: Node.js << matrix.node_version >>
-          matrix:
-            parameters:
-              node_version: [ '10', '12', '14' ]
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only:
-                - /test_@snyk\/child-process.*/
       - test_pipenv-pipfile:
           name: Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:

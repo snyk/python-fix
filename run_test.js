@@ -5,7 +5,7 @@ async function main() {
     console.error('This script can only run from circle ci');
     process.exit(1);
   }
-  const pkgsWithMatrix = ['@snyk/fix-pipenv-pipfile', '@snyk/child-process'];
+  const pkgsWithMatrix = ['@snyk/fix-pipenv-pipfile'];
 
   // list of changed packages (their names, not their folder names)
   const changedPackages = JSON.parse(
@@ -21,12 +21,20 @@ async function main() {
   const pkgsToTestWithDifferentEnvs = changedPackages.filter((pkgName) =>
     pkgsWithMatrix.includes(pkgName),
   );
+  const pkgsToTestWithLerna = changedPackages.filter(
+    (pkgName) => !pkgsToTestWithDifferentEnvs.includes(pkgName),
+  );
 
   const sha1 = process.env.CIRCLE_SHA1;
   for (const pkg of pkgsToTestWithDifferentEnvs) {
     run(`git tag -f test_${pkg}_${sha1}`);
   }
   run(`git push --tag`);
+
+  const whitelist = pkgsToTestWithLerna
+    .map((pkgName) => `--scope ${pkgName}`)
+    .join(' ');
+  run(`lerna run test ${whitelist} --stream`);
 }
 
 main().catch((err) => {
