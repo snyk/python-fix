@@ -10,8 +10,8 @@ commands:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
       - run:
-          name: install lerna
-          command: npm install lerna@4.0.0
+          name: npm i root deps
+          command: npm install --no-package-lock
       - run:
           name: lerna bootstrap
           command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
