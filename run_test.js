@@ -22,6 +22,15 @@ async function main() {
     pkgsWithMatrix.includes(pkgName),
   );
 
+  const pkgsNotCovered = changedPackages.filter((pkgName) =>
+    !pkgsToTestWithDifferentEnvs.includes(pkgName),
+  );
+
+  if (pkgsNotCovered.length > 0) {
+    console.error(`These changed packages did not have tests assigned: ${pkgsNotCovered.join(', ')}`);
+    process.exit(1);
+  }
+
   const sha1 = process.env.CIRCLE_SHA1;
   for (const pkg of pkgsToTestWithDifferentEnvs) {
     run(`git tag -f test_${pkg}_${sha1}`);
