@@ -1,6 +1,5 @@
 import * as debugLib from 'debug';
-
-import { execute, ExecuteResponse } from './sub-process';
+import { execute } from '@snyk/child-process';
 
 const debug = debugLib('snyk-fix:python:Pipfile');
 
@@ -20,7 +19,7 @@ export function extractPipenvVersion(stdout: string): string | null {
 export async function isPipenvInstalled(): Promise<{
   version: string | null;
 }> {
-  let res: ExecuteResponse;
+  let res;
   try {
     res = await execute('pipenv', ['--version'], {});
   } catch (e) {
