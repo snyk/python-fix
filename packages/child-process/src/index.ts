@@ -1,1 +1,1 @@
-export { execute } from './child-process';
+export { execute, ExecuteResponse } from './child-process';
