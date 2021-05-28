@@ -1,7 +1,7 @@
 import * as debugLib from 'debug';
 import Bottleneck from 'bottleneck';
 
-import { execute, ExecuteResponse } from './sub-process';
+import { execute, ExecuteResponse } from '@snyk/child-process';
 
 const debug = debugLib('snyk-fix:python:Pipfile');
 
@@ -36,7 +36,7 @@ async function runPipenvInstall(
     args.push(...pythonArg);
   }
 
-  let res: ExecuteResponse;
+  let res;
 
   try {
     res = await execute('pipenv', args, {
