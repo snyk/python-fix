@@ -31,6 +31,40 @@ commands:
       - run:
           name: lerna run test --scope << parameters.package-name >> --stream
           command: ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
+  run_test-poetry:
+    parameters:
+      python_version:
+        type: string
+      poetry_version:
+        type: string
+    steps:
+      - run:
+          name: Poetry install << parameters.python_version >> && lerna run test --scope @snyk/fix-poetry --stream
+          command: |
+            apt -qq update
+            apt -qq install python3-pip python-pip -y &> /dev/null
+            curl https://pyenv.run | $SHELL
+            export PATH="/root/.pyenv/bin:$PATH"
+            eval "$(pyenv init -)"
+            eval "$(pyenv virtualenv-init -)"
+            pyenv -v
+            export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
+            # Install the specific release of Python if it isn't already installed
+            pyenv install -s $PYTHON_VERSION_LATEST
+            pyenv sh-shell $PYTHON_VERSION_LATEST
+            python --version
+            export LANG="en_US.UTF-8"
+            export PATH=$HOME/.local/bin:$PATH
+            export PATH="$PATH:$HOME/.local/bin"
+            # get poetry installer
+            echo "Installing poetry version $POETRY_VERSION"
+            curl -sSL curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+            python get-poetry.py
+            # Run node tests
+            ./node_modules/.bin/lerna run test --scope @snyk/fix-poetry --stream
+          environment:
+            PYTHON_VERSION: << parameters.python_version >>
+            POETRY_VERSION: << parameters.poetry_version >>
   run_test-pipenv-pipfile:
     parameters:
       python_version:
@@ -105,6 +139,21 @@ jobs:
       - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
+  test_poetry:
+    parameters:
+      node_version:
+        type: string
+      python_version:
+        type: string
+      poetry_version:
+        type: string
+    docker:
+      - image: node:<< parameters.node_version >>
+    steps:
+      - checkout_and_install
+      - run_test-poetry:
+          python_version: << parameters.python_version >>
+          poetry_version: << parameters.poetry_version >>
   test_pip-requirements:
     parameters:
       node_version:
@@ -151,6 +200,34 @@ workflows:
             tags:
               only:
                 - /test_@snyk\/fix-pipenv-pipfile.*/
+      - test_poetry:
+          name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
+          matrix:
+            parameters:
+              node_version: [
+                # '10',
+                # '12',
+                '14' ]
+              # Update the SUPPORTED.md as well if these versions change
+              poetry_version: [
+                '1.1.6',
+                # '1.1.5',
+                # '1.1.4',
+                # '1.0.9',
+                # '1.0.8',
+                # '1.0.7', '0.12.17',
+                #'0.12.16',
+                ]
+              # Update the SUPPORTED.md as well if these versions change
+              python_version: [ '3.9',
+              # '3.8', '3.7', '3.6', '2.7'
+               ]
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+                - /test_@snyk\/fix-poetry.*/
       - test_pip-requirements:
           name: Package pip-requirements | Node.js << matrix.node_version >>
           matrix:
