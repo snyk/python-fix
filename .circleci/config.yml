@@ -60,6 +60,7 @@ commands:
             node -v && python --version && pip --version
             echo "Installing poetry version $POETRY_VERSION"
             pip install poetry==$POETRY_VERSION
+            pip install --force-reinstall virtualenv
             # Run node tests
             ./node_modules/.bin/lerna run test --scope @snyk/fix-poetry --stream
           environment:
