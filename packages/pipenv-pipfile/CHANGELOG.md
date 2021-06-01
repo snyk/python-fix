@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-pipenv-pipfile@0.4.3...@snyk/fix-pipenv-pipfile@0.5.0) (2021-06-01)
+
+
+### Features
+
+* use @snyk/child-process pkg instead of execute() ([d3b223f](https://github.com/snyk-tech-services/python-fix/commit/d3b223fd17134b038608c59c7d2f6f80850388c3))
+
+
+
+
+
 ## [0.4.3](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-pipenv-pipfile@0.4.2...@snyk/fix-pipenv-pipfile@0.4.3) (2021-05-21)
 
 
