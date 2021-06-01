@@ -1,6 +1,5 @@
 import * as debugLib from 'debug';
-
-import { execute, ExecuteResponse } from './sub-process';
+import { execute, ExecuteResponse } from '@snyk/child-process';
 
 const debug = debugLib('snyk-fix:python:Pipfile');
 
