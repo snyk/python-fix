@@ -1,7 +1,7 @@
 {
-  "name": "@snyk/child-process",
-  "description": "Snyk child process execute implementation",
-  "version": "0.2.0",
+  "name": "@snyk/fix-poetry",
+  "description": "Snyk python ecosystem fix remediation",
+  "version": "0.4.3",
   "main": "dist/index.js",
   "scripts": {
     "format:check": "prettier --check '{''{lib,test}/!(fixtures)/**/*,*}.{js,ts,yml}'",
@@ -33,12 +33,13 @@
   ],
   "homepage": "https://github.com/snyk-tech-services/python-fix#readme",
   "dependencies": {
-    "@typescript-eslint/parser": "^4.22.1",
-    "debug": "^4.1.1",
+    "debug": "4.3.1",
+    "prettier": "^2.3.0",
     "source-map-support": "^0.5.16",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
+    "@types/debug": "4.1.5",
     "@types/jest": "^26.0.23",
     "@types/node": "^15.3.1",
     "@typescript-eslint/eslint-plugin": "^2.18.0",
@@ -59,7 +60,7 @@
   },
   "release": {
     "branches": [
-      "main"
+      "master"
     ]
   }
 }
