@@ -15,6 +15,31 @@ commands:
       - run:
           name: lerna bootstrap
           command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
+
+  checkout_and_install_node:
+    parameters:
+      node_version:
+        type: string
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Install Node.js
+          command: |
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+            export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+            # Switch to Node.js version
+            nvm install $NODE_VERSION && nvm use $NODE_VERSION
+            node -v
+      - run:
+          name: npm i root deps
+          command: npm install --no-package-lock
+      - run:
+          name: lerna bootstrap
+          command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
   run_lerna_tests:
     steps:
       - run:
@@ -33,6 +58,8 @@ commands:
           command: ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
   run_test-pipenv-pipfile:
     parameters:
+      node_version:
+        type: string
       python_version:
         type: string
       pipenv_version:
@@ -41,8 +68,6 @@ commands:
       - run:
           name: pyenv install << parameters.python_version >> && lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           command: |
-            apt -qq update
-            apt -qq install python3-pip python-pip -y &> /dev/null
             curl https://pyenv.run | $SHELL
             export PATH="/root/.pyenv/bin:$PATH"
             eval "$(pyenv init -)"
@@ -99,10 +124,12 @@ jobs:
       pipenv_version:
         type: string
     docker:
-      - image: node:<< parameters.node_version >>
+      - image: circleci/python:<< parameters.python_version >>-node
     steps:
-      - checkout_and_install
+      - checkout_and_install:
+          node_version: << parameters.node_version >>
       - run_test-pipenv-pipfile:
+          node_version: << parameters.node_version >>
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
   test_pip-requirements:
