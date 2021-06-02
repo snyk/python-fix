@@ -39,12 +39,12 @@ commands:
         type: string
     steps:
       - run:
-          name: pyenv install << parameters.python_version >> && lerna run test --scope @snyk/fix-pipenv-pipfile --stream
+          name: pyenv install << parameters.python_version >>
           command: |
             apt -qq update
             apt -qq install python3-pip python-pip -y &> /dev/null
             curl https://pyenv.run | $SHELL
-            export PATH="/root/.pyenv/bin:$PATH"
+            echo 'export PATH="/root/.pyenv/bin:$PATH"' >> $BASH_ENV
             eval "$(pyenv init -)"
             eval "$(pyenv virtualenv-init -)"
             pyenv -v
@@ -55,17 +55,18 @@ commands:
             pyenv install -s 3.8.1
             pyenv sh-shell $PYTHON_VERSION_LATEST
             python --version
-            export LANG="en_US.UTF-8"
-            export LC_CTYPE="en_US.UTF-8"
-            export PATH=$HOME/.local/bin:$PATH
+            echo 'export LANG="en_US.UTF-8"' >> $BASH_ENV
+            echo 'export LC_CTYPE="en_US.UTF-8"' >> $BASH_ENV
+            echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
             python -m pip install --user pipenv===$PIPENV_VER
-            export PATH="$PATH:$HOME/.local/bin"
+            echo 'export PATH="$PATH:$HOME/.local/bin"' >> $BASH_ENV
             python -m pipenv --version
-            # Run node tests
-            ./node_modules/.bin/lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           environment:
             PYTHON_VERSION: << parameters.python_version >>
             PIPENV_VER: << parameters.pipenv_version >>
+      - run_generic_test:
+          package-name: '@snyk/fix-pipenv-pipfile'
+
 jobs:
   build-test:
     docker:
@@ -114,7 +115,7 @@ jobs:
     steps:
       - checkout_and_install
       - run_generic_test:
-          package-name: "@snyk/fix-pip-requirements"
+          package-name: '@snyk/fix-pip-requirements'
   test_child-process:
     parameters:
       node_version:
@@ -124,7 +125,7 @@ jobs:
     steps:
       - checkout_and_install
       - run_generic_test:
-          package-name: "@snyk/child-process"
+          package-name: '@snyk/child-process'
 workflows:
   version: 2
   build-test:
@@ -140,11 +141,18 @@ workflows:
           name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              node_version: [ '10', '12', '14' ]
+              node_version: ['10', '12', '14']
               # Update the SUPPORTED.md as well if these versions change
-              pipenv_version: [ '2020.11.4', '2020.8.13', '2020.6.2', '2020.5.28', '2018.11.26' ]
+              pipenv_version:
+                [
+                  '2020.11.4',
+                  '2020.8.13',
+                  '2020.6.2',
+                  '2020.5.28',
+                  '2018.11.26',
+                ]
               # Update the SUPPORTED.md as well if these versions change
-              python_version: [ '3.9', '3.8', '3.7', '3.6', '2.7' ]
+              python_version: ['3.9', '3.8', '3.7', '3.6', '2.7']
           filters:
             branches:
               ignore: /.*/
@@ -155,7 +163,7 @@ workflows:
           name: Package pip-requirements | Node.js << matrix.node_version >>
           matrix:
             parameters:
-              node_version: [ '10', '12', '14' ]
+              node_version: ['10', '12', '14']
           filters:
             branches:
               ignore: /.*/
@@ -166,7 +174,7 @@ workflows:
           name: Package child-process | Node.js << matrix.node_version >>
           matrix:
             parameters:
-              node_version: [ '10', '12', '14' ]
+              node_version: ['10', '12', '14']
           filters:
             branches:
               ignore: /.*/
