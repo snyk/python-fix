@@ -189,7 +189,22 @@ workflows:
           name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              node_version: [ '10', '12', '14' ]
+              node_version: [ '10', '12' ]
+              # Update the SUPPORTED.md as well if these versions change
+              pipenv_version: [ '2020.11.4', '2020.8.13', '2020.6.2', '2020.5.28', '2018.11.26' ]
+              # Update the SUPPORTED.md as well if these versions change
+              python_version: [ '3.9', '3.8', '3.7', '3.6', '2.7' ]
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+                - /test_@snyk\/fix-pipenv-pipfile.*/
+      - test_pipenv-pipfile:
+          name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
+          matrix:
+            parameters:
+              node_version: [ '14' ]
               # Update the SUPPORTED.md as well if these versions change
               pipenv_version: [ '2020.11.4', '2020.8.13', '2020.6.2', '2020.5.28', '2018.11.26' ]
               # Update the SUPPORTED.md as well if these versions change
