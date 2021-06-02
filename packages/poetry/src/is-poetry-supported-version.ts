@@ -12,11 +12,6 @@ export function isPoetrySupportedVersion(
     '1.0.9',
     '1.0.8',
     '1.0.7',
-<<<<<<< HEAD
-=======
-    '0.12.17',
-    '0.12.16',
->>>>>>> feat: Poetry fix package
   ];
   let supported = false;
   if (SUPPORTED_POETRY_VERSIONS.includes(version)) {
