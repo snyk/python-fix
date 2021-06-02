@@ -13,7 +13,6 @@ export function isPipenvSupportedVersion(
     '2018.10.13',
     '2018.10.9',
     '2018.7.1',
-    '2018.6.25',
   ];
   let supported = false;
   if (SUPPORTED_PIPENV_VERSIONS.includes(version)) {

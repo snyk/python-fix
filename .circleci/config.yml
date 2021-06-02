@@ -47,6 +47,7 @@ commands:
             echo 'export PATH="/root/.pyenv/bin:$PATH"' >> $BASH_ENV
             eval "$(pyenv init -)"
             eval "$(pyenv virtualenv-init -)"
+            source $BASH_ENV
             pyenv -v
             export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
             # Install the specific release of Python if it isn't already installed
@@ -60,6 +61,7 @@ commands:
             echo 'export PATH=$HOME/.local/bin:$PATH' >> $BASH_ENV
             python -m pip install --user pipenv===$PIPENV_VER
             echo 'export PATH="$PATH:$HOME/.local/bin"' >> $BASH_ENV
+            source $BASH_ENV
             python -m pipenv --version
           environment:
             PYTHON_VERSION: << parameters.python_version >>
@@ -141,15 +143,15 @@ workflows:
           name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              node_version: ['10', '12', '14']
+              node_version: ['10']
               # Update the SUPPORTED.md as well if these versions change
               pipenv_version:
                 [
                   '2020.11.4',
                   '2020.8.13',
-                  '2020.6.2',
-                  '2020.5.28',
-                  '2018.11.26',
+                  # '2020.6.2',
+                  # '2020.5.28',
+                  # '2018.11.26',
                 ]
               # Update the SUPPORTED.md as well if these versions change
               python_version: ['3.9', '3.8', '3.7', '3.6', '2.7']
