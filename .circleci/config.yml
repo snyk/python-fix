@@ -33,6 +33,8 @@ commands:
           command: ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
   run_test-poetry:
     parameters:
+      node_version:
+        type: string
       python_version:
         type: string
       poetry_version:
@@ -41,36 +43,38 @@ commands:
       - run:
           name: Poetry install << parameters.python_version >> && lerna run test --scope @snyk/fix-poetry --stream
           command: |
-            apt-get update && apt-get install -y \
-            build-essential \
-            ca-certificates \
-            curl \
-            git \
-            libbz2-dev \
-            liblzma-dev \
-            libncurses5-dev \
-            libncursesw5-dev \
-            libreadline-dev \
-            libffi-dev \
-            libsqlite3-dev \
-            libssl-dev \
-            libxml2-dev \
-            libxmlsec1-dev \
-            llvm \
-            make \
-            python-openssl \
-            tk-dev \
-            wget \
-            xz-utils \
-            zlib1g-dev && \
-            curl https://pyenv.run | bash && \
-            rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-            export PATH="/root/.pyenv/bin:$PATH"
-            eval "$(pyenv init -)"
-            eval "$(pyenv virtualenv-init -)"
-            pyenv -v
-            export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
-            pyenv install $PYTHON_VERSION_LATEST && pyenv global $PYTHON_VERSION_LATEST
+            # apt-get update && apt-get install -y \
+            # build-essential \
+            # ca-certificates \
+            # curl \
+            # git \
+            # libbz2-dev \
+            # liblzma-dev \
+            # libncurses5-dev \
+            # libncursesw5-dev \
+            # libreadline-dev \
+            # libffi-dev \
+            # libsqlite3-dev \
+            # libssl-dev \
+            # libxml2-dev \
+            # libxmlsec1-dev \
+            # llvm \
+            # make \
+            # python-openssl \
+            # tk-dev \
+            # wget \
+            # xz-utils \
+            # zlib1g-dev && \
+            # curl https://pyenv.run | bash && \
+            # rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+            # export PATH="/root/.pyenv/bin:$PATH"
+            # eval "$(pyenv init -)"
+            # eval "$(pyenv virtualenv-init -)"
+            # pyenv -v
+            # export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
+            # pyenv install $PYTHON_VERSION_LATEST && pyenv global $PYTHON_VERSION_LATEST
+
+
             python --version && pip --version
             echo "Installing poetry version $POETRY_VERSION"
             pip install poetry==$POETRY_VERSION
@@ -162,10 +166,11 @@ jobs:
       poetry_version:
         type: string
     docker:
-      - image: node:<< parameters.node_version >>
+      - image: circleci/python:<< parameters.python_version >>
     steps:
       - checkout_and_install
       - run_test-poetry:
+          node_version: << parameters.node_version >>
           python_version: << parameters.python_version >>
           poetry_version: << parameters.poetry_version >>
   test_pip-requirements:
@@ -222,7 +227,6 @@ workflows:
               only:
                 - /test_@snyk\/fix-pipenv-pipfile.*/
       - test_poetry:
-          machine: true
           name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
           matrix:
             parameters:
