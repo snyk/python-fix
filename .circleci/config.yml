@@ -204,23 +204,39 @@ workflows:
           name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
           matrix:
             parameters:
-              node_version: [
-                #"10", "12",
-                "14"]
+              node_version: ["10", "12", "14"]
+              # Update the SUPPORTED.md as well if these versions change
+              poetry_version:
+                [
+                  "0.12.17",
+                  "0.12.16",
+                ]
+              # Update the SUPPORTED.md as well if these versions change
+              python_version: ["2.7"]
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+                - /test_@snyk\/fix-poetry.*/
+
+      - test_poetry:
+          name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
+          matrix:
+            parameters:
+              node_version: ["10", "12","14"]
               # Update the SUPPORTED.md as well if these versions change
               poetry_version:
                 [
                   "1.1.6",
-                  # "1.1.5",
-                  # "1.1.4",
-                  # "1.0.9",
-                  # "1.0.8",
-                  # "1.0.7",
-                  # "0.12.17",
-                  "0.12.16",
+                  "1.1.5",
+                  "1.1.4",
+                  "1.0.9",
+                  "1.0.8",
+                  "1.0.7",
                 ]
               # Update the SUPPORTED.md as well if these versions change
-              python_version: ["3.9", "3.8", "3.7", "3.6", "2.7"]
+              python_version: ["3.9", "3.8", "3.7", "3.6"]
           filters:
             branches:
               ignore: /.*/
