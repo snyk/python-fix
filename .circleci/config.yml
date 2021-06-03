@@ -3,6 +3,22 @@ orbs:
   snyk: snyk/snyk@0.0.8
 
 commands:
+  switch_node_version:
+    parameters:
+      node_version:
+        type: string
+    steps:
+      - run:
+          name: Install Node.js << parameters.node_version >>
+          command: |
+                  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+                  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+                  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+                  # Switch to Node.js version
+                  nvm install $NODE_VERSION && nvm use $NODE_VERSION
+          environment:
+            NODE_VERSION: << parameters.node_version >>
+
   checkout_and_install:
     steps:
       - checkout
@@ -33,8 +49,6 @@ commands:
           command: ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
   run_test-poetry:
     parameters:
-      node_version:
-        type: string
       python_version:
         type: string
       poetry_version:
@@ -43,18 +57,12 @@ commands:
       - run:
           name: Poetry install << parameters.python_version >> && lerna run test --scope @snyk/fix-poetry --stream
           command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-            export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-            # Switch to Node.js version
-            nvm install $NODE_VERSION && nvm use $NODE_VERSION
             node -v && python --version && pip --version
             echo "Installing poetry version $POETRY_VERSION"
             pip install poetry==$POETRY_VERSION
             # Run node tests
             ./node_modules/.bin/lerna run test --scope @snyk/fix-poetry --stream
           environment:
-            NODE_VERSION: << parameters.node_version >>
             PYTHON_VERSION: << parameters.python_version >>
             POETRY_VERSION: << parameters.poetry_version >>
   run_test-pipenv-pipfile:
@@ -142,9 +150,10 @@ jobs:
     docker:
       - image: circleci/python:<< parameters.python_version >>-node
     steps:
+      - switch_node_version:
+          node_version: << parameters.node_version >>
       - checkout_and_install
       - run_test-poetry:
-          node_version: << parameters.node_version >>
           python_version: << parameters.python_version >>
           poetry_version: << parameters.poetry_version >>
   test_pip-requirements:
@@ -204,20 +213,16 @@ workflows:
           name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
           matrix:
             parameters:
-              node_version: [
-                #"10", "12",
-                "14"]
+              node_version: ["10", "12","14"]
               # Update the SUPPORTED.md as well if these versions change
               poetry_version:
                 [
                   "1.1.6",
-                  # "1.1.5",
-                  # "1.1.4",
-                  # "1.0.9",
-                  # "1.0.8",
-                  # "1.0.7",
-                  # "0.12.17",
-                  "0.12.16",
+                  "1.1.5",
+                  "1.1.4",
+                  "1.0.9",
+                  "1.0.8",
+                  "1.0.7",
                 ]
               # Update the SUPPORTED.md as well if these versions change
               python_version: ["3.9", "3.8", "3.7", "3.6", "2.7"]
