@@ -75,8 +75,6 @@ commands:
       - run:
           name: pyenv install << parameters.python_version >> && lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           command: |
-            apt -qq update
-            apt -qq install python3-pip python-pip -y &> /dev/null
             curl https://pyenv.run | $SHELL
             export PATH="/root/.pyenv/bin:$PATH"
             eval "$(pyenv init -)"
@@ -118,13 +116,13 @@ jobs:
     steps:
       - checkout_and_install
       - run:
-          name: lerna run build build && lerna publish --ignore-scripts --yes
+          name: lerna run build && lerna publish --ignore-scripts --yes
           command: |
             echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/.npmrc
             git config --global user.email "circleci@snyk.io"
             git config --global user.name "CircleCI"
             ./node_modules/.bin/lerna run build
-            ./node_modules/.bin/lerna publish --ignore-scripts --yes
+            ./node_modules/.bin/lerna publish --ignore-scripts --yes --no-verify-access
   test_pipenv-pipfile:
     parameters:
       node_version:
