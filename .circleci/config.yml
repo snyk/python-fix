@@ -18,7 +18,10 @@ commands:
                   nvm install $NODE_VERSION && nvm use $NODE_VERSION
           environment:
             NODE_VERSION: << parameters.node_version >>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7408744... chore: speed up tests by using prebuild Python images
   checkout_and_install:
     steps:
       - checkout
@@ -92,35 +95,33 @@ commands:
             POETRY_VERSION: << parameters.poetry_version >>
   run_test-pipenv-pipfile:
     parameters:
-      node_version:
-        type: string
       python_version:
         type: string
       pipenv_version:
         type: string
     steps:
       - run:
-          name: pyenv install << parameters.python_version >> && lerna run test --scope @snyk/fix-pipenv-pipfile --stream
+          name: lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           command: |
+            # Install pyenv
             curl https://pyenv.run | $SHELL
             export PATH="/root/.pyenv/bin:$PATH"
             eval "$(pyenv init -)"
             eval "$(pyenv virtualenv-init -)"
-            pyenv -v
-            export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
-            # Install the specific release of Python if it isn't already installed
-            pyenv install -s $PYTHON_VERSION_LATEST
-            # Required for a specific test
+            # Install Python 3.8.1 (required for a specific test)
             pyenv install -s 3.8.1
+<<<<<<< HEAD
             pyenv sh-shell $PYTHON_VERSION_LATEST
             export PYENV_VERSION=$PYTHON_VERSION_LATEST
             python --version
             export LANG="en_US.UTF-8"
             export LC_CTYPE="en_US.UTF-8"
             export PATH=$HOME/.local/bin:$PATH
+=======
+>>>>>>> 7408744... chore: speed up tests by using prebuild Python images
             python -m pip install --user pipenv===$PIPENV_VER
             export PATH="$PATH:$HOME/.local/bin"
-            python -m pipenv --version
+            node -v && pyenv -v && python --version && python -m pipenv --version
             # Run node tests
             ./node_modules/.bin/lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           environment:
@@ -161,10 +162,10 @@ jobs:
     docker:
       - image: circleci/python:<< parameters.python_version >>-node
     steps:
-      - checkout_and_install:
+      - switch_node_version:
           node_version: << parameters.node_version >>
+      - checkout_and_install
       - run_test-pipenv-pipfile:
-          node_version: << parameters.node_version >>
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
   test_poetry:
