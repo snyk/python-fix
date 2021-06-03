@@ -77,9 +77,9 @@ commands:
           command: |
             # Install pyenv
             curl https://pyenv.run | $SHELL
-            export PATH="/root/.pyenv/bin:$PATH"
-            eval "$(pyenv init -)"
-            eval "$(pyenv virtualenv-init -)"
+            export PYENV_ROOT="$HOME/.pyenv"
+            export PATH="$PYENV_ROOT/bin:$PATH"
+            eval "$(pyenv init --path)"
             # Install Python 3.8.1 (required for a specific test)
             pyenv install -s 3.8.1
             export PYENV_VERSION=$PYTHON_VERSION_LATEST
