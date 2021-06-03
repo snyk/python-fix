@@ -3,6 +3,22 @@ orbs:
   snyk: snyk/snyk@0.0.8
 
 commands:
+  switch_node_version:
+    parameters:
+      node_version:
+        type: string
+    steps:
+      - run:
+          name: Install Node.js << parameters.node_version >>
+          command: |
+                  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+                  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+                  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+                  # Switch to Node.js version
+                  nvm install $NODE_VERSION && nvm use $NODE_VERSION
+          environment:
+            NODE_VERSION: << parameters.node_version >>
+
   checkout_and_install:
     steps:
       - checkout
@@ -31,6 +47,24 @@ commands:
       - run:
           name: lerna run test --scope << parameters.package-name >> --stream
           command: ./node_modules/.bin/lerna run test --scope << parameters.package-name >> --stream
+  run_test-poetry:
+    parameters:
+      python_version:
+        type: string
+      poetry_version:
+        type: string
+    steps:
+      - run:
+          name: Poetry install << parameters.python_version >> && lerna run test --scope @snyk/fix-poetry --stream
+          command: |
+            node -v && python --version && pip --version
+            echo "Installing poetry version $POETRY_VERSION"
+            pip install poetry==$POETRY_VERSION
+            # Run node tests
+            ./node_modules/.bin/lerna run test --scope @snyk/fix-poetry --stream
+          environment:
+            PYTHON_VERSION: << parameters.python_version >>
+            POETRY_VERSION: << parameters.poetry_version >>
   run_test-pipenv-pipfile:
     parameters:
       python_version:
@@ -106,6 +140,23 @@ jobs:
       - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
+  test_poetry:
+    parameters:
+      node_version:
+        type: string
+      python_version:
+        type: string
+      poetry_version:
+        type: string
+    docker:
+      - image: circleci/python:<< parameters.python_version >>-node
+    steps:
+      - switch_node_version:
+          node_version: << parameters.node_version >>
+      - checkout_and_install
+      - run_test-poetry:
+          python_version: << parameters.python_version >>
+          poetry_version: << parameters.poetry_version >>
   test_pip-requirements:
     parameters:
       node_version:
@@ -141,22 +192,52 @@ workflows:
           name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              node_version: [ '10', '12', '14' ]
+              node_version: ["10", "12", "14"]
               # Update the SUPPORTED.md as well if these versions change
-              pipenv_version: [ '2020.11.4', '2020.8.13', '2020.6.2', '2020.5.28', '2018.11.26' ]
+              pipenv_version:
+                [
+                  "2020.11.4",
+                  "2020.8.13",
+                  "2020.6.2",
+                  "2020.5.28",
+                  "2018.11.26",
+                ]
               # Update the SUPPORTED.md as well if these versions change
-              python_version: [ '3.9', '3.8', '3.7', '3.6', '2.7' ]
+              python_version: ["3.9", "3.8", "3.7", "3.6", "2.7"]
           filters:
             branches:
               ignore: /.*/
             tags:
               only:
                 - /test_@snyk\/fix-pipenv-pipfile.*/
+      - test_poetry:
+          name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
+          matrix:
+            parameters:
+              node_version: ["10", "12","14"]
+              # Update the SUPPORTED.md as well if these versions change
+              poetry_version:
+                [
+                  "1.1.6",
+                  "1.1.5",
+                  "1.1.4",
+                  "1.0.9",
+                  "1.0.8",
+                  "1.0.7",
+                ]
+              # Update the SUPPORTED.md as well if these versions change
+              python_version: ["3.9", "3.8", "3.7", "3.6", "2.7"]
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only:
+                - /test_@snyk\/fix-poetry.*/
       - test_pip-requirements:
           name: Package pip-requirements | Node.js << matrix.node_version >>
           matrix:
             parameters:
-              node_version: [ '10', '12', '14' ]
+              node_version: ["10", "12", "14"]
           filters:
             branches:
               ignore: /.*/
@@ -167,7 +248,7 @@ workflows:
           name: Package child-process | Node.js << matrix.node_version >>
           matrix:
             parameters:
-              node_version: [ '10', '12', '14' ]
+              node_version: ["10", "12", "14"]
           filters:
             branches:
               ignore: /.*/

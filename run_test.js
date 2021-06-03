@@ -5,12 +5,17 @@ async function main() {
     console.error('This script can only run from circle ci');
     process.exit(1);
   }
-  const pkgsWithMatrix = ['@snyk/fix-pipenv-pipfile', '@snyk/fix-pip-requirements', '@snyk/child-process'];
+  const pkgsWithMatrix = [
+    '@snyk/fix-pipenv-pipfile',
+    '@snyk/fix-pip-requirements',
+    '@snyk/child-process',
+    '@snyk/fix-poetry',
+  ];
 
   // list of changed packages (their names, not their folder names)
   const changedPackages = JSON.parse(
     run(`lerna changed --loglevel error --json || echo []`),
-  ).map(pkg => pkg.name);
+  ).map((pkg) => pkg.name);
 
   if (changedPackages.length === 0) {
     console.log('No packages to test');
@@ -22,12 +27,16 @@ async function main() {
     pkgsWithMatrix.includes(pkgName),
   );
 
-  const pkgsNotCovered = changedPackages.filter((pkgName) =>
-    !pkgsToTestWithDifferentEnvs.includes(pkgName),
+  const pkgsNotCovered = changedPackages.filter(
+    (pkgName) => !pkgsToTestWithDifferentEnvs.includes(pkgName),
   );
 
   if (pkgsNotCovered.length > 0) {
-    console.error(`These changed packages did not have tests assigned: ${pkgsNotCovered.join(', ')}`);
+    console.error(
+      `These changed packages did not have tests assigned: ${pkgsNotCovered.join(
+        ', ',
+      )}`,
+    );
     process.exit(1);
   }
 
