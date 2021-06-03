@@ -30,31 +30,6 @@ commands:
       - run:
           name: lerna bootstrap
           command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
-
-  checkout_and_install_node:
-    parameters:
-      node_version:
-        type: string
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: Install Node.js
-          command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-            export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-            # Switch to Node.js version
-            nvm install $NODE_VERSION && nvm use $NODE_VERSION
-            node -v
-      - run:
-          name: npm i root deps
-          command: npm install --no-package-lock
-      - run:
-          name: lerna bootstrap
-          command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
   run_lerna_tests:
     steps:
       - run:
@@ -172,11 +147,17 @@ workflows:
           name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              node_version: [ '10', '12', '14' ]
+              node_version: [ '10',
+              #'12', '14'
+               ]
               # Update the SUPPORTED.md as well if these versions change
-              pipenv_version: [ '2020.11.4', '2020.8.13', '2020.6.2', '2020.5.28', '2018.11.26' ]
+              pipenv_version: [ '2020.11.4',
+              #'2020.8.13', '2020.6.2', '2020.5.28', '2018.11.26'
+              ]
               # Update the SUPPORTED.md as well if these versions change
-              python_version: [ '3.9', '3.8', '3.7', '3.6', '2.7' ]
+              python_version: [ '3.9',
+              #'3.8', '3.7', '3.6',
+              '2.7' ]
           filters:
             branches:
               ignore: /.*/
