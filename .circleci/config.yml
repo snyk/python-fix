@@ -73,29 +73,20 @@ commands:
         type: string
     steps:
       - run:
-          name: pyenv install << parameters.python_version >> && lerna run test --scope @snyk/fix-pipenv-pipfile --stream
+          name: lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           command: |
-            apt -qq update
-            apt -qq install python3-pip python-pip -y &> /dev/null
+            # Install pyenv
             curl https://pyenv.run | $SHELL
             export PATH="/root/.pyenv/bin:$PATH"
             eval "$(pyenv init -)"
             eval "$(pyenv virtualenv-init -)"
-            pyenv -v
-            export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
-            # Install the specific release of Python if it isn't already installed
-            pyenv install -s $PYTHON_VERSION_LATEST
-            # Required for a specific test
+            # Install Python 3.8.1 (required for a specific test)
             pyenv install -s 3.8.1
-            pyenv sh-shell $PYTHON_VERSION_LATEST
             export PYENV_VERSION=$PYTHON_VERSION_LATEST
-            python --version
-            export LANG="en_US.UTF-8"
-            export LC_CTYPE="en_US.UTF-8"
-            export PATH=$HOME/.local/bin:$PATH
+            # Install pipenv
             python -m pip install --user pipenv===$PIPENV_VER
             export PATH="$PATH:$HOME/.local/bin"
-            python -m pipenv --version
+            node -v && pyenv -v && python --version && python -m pipenv --version
             # Run node tests
             ./node_modules/.bin/lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           environment:
@@ -134,8 +125,10 @@ jobs:
       pipenv_version:
         type: string
     docker:
-      - image: node:<< parameters.node_version >>
+      - image: circleci/python:<< parameters.python_version >>-node
     steps:
+      - switch_node_version:
+          node_version: << parameters.node_version >>
       - checkout_and_install
       - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
@@ -192,18 +185,22 @@ workflows:
           name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              node_version: ["10", "12", "14"]
+              node_version: [
+              #"10", "12",
+              "14"]
               # Update the SUPPORTED.md as well if these versions change
               pipenv_version:
                 [
                   "2020.11.4",
-                  "2020.8.13",
-                  "2020.6.2",
-                  "2020.5.28",
-                  "2018.11.26",
+                  # "2020.8.13",
+                  # "2020.6.2",
+                  # "2020.5.28",
+                  # "2018.11.26",
                 ]
               # Update the SUPPORTED.md as well if these versions change
-              python_version: ["3.9", "3.8", "3.7", "3.6", "2.7"]
+              python_version: ["3.9",
+              #"3.8", "3.7", "3.6",
+              "2.7"]
           filters:
             branches:
               ignore: /.*/
