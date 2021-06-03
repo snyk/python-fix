@@ -75,6 +75,8 @@ commands:
       - run:
           name: lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           command: |
+            apt -qq update
+            apt -qq install python3-pip python-pip -y &> /dev/null
             # Install pyenv
             curl https://pyenv.run | $SHELL
             export PATH="/root/.pyenv/bin:$PATH"
