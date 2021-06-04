@@ -6,7 +6,7 @@ authors = ["ghe <lili@snyk.io>"]
 
 [tool.poetry.dependencies]
 python = "*"
-six = "1.15.0"
+six = "1.16.0"
 
 
 [build-system]
