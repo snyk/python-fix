@@ -6,8 +6,9 @@ authors = ["ghe <email@email.io>"]
 
 [tool.poetry.dependencies]
 python = "*"
-six = "1.16.0"
 
+[tool.poetry.dev-dependencies]
+json-api = "0.1.22"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
