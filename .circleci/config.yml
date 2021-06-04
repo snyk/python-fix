@@ -11,11 +11,11 @@ commands:
       - run:
           name: Install Node.js << parameters.node_version >>
           command: |
-                  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-                  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-                  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-                  # Switch to Node.js version
-                  nvm install $NODE_VERSION && nvm use $NODE_VERSION
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+            export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+            # Switch to Node.js version
+            nvm install $NODE_VERSION && nvm use $NODE_VERSION
           environment:
             NODE_VERSION: << parameters.node_version >>
 
@@ -73,27 +73,20 @@ commands:
         type: string
     steps:
       - run:
-          name: pyenv install << parameters.python_version >> && lerna run test --scope @snyk/fix-pipenv-pipfile --stream
+          name: lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           command: |
+            # Install pyenv
             curl https://pyenv.run | $SHELL
-            export PATH="/root/.pyenv/bin:$PATH"
-            eval "$(pyenv init -)"
-            eval "$(pyenv virtualenv-init -)"
-            pyenv -v
-            export PYTHON_VERSION_LATEST=`pyenv install --list | grep -v 'Available versions' | awk '{$1=$1};1' | grep "^$PYTHON_VERSION\.[0-9]\+$" | tail -1`
-            # Install the specific release of Python if it isn't already installed
-            pyenv install -s $PYTHON_VERSION_LATEST
-            # Required for a specific test
+            export PYENV_ROOT="$HOME/.pyenv"
+            export PATH="$PYENV_ROOT/bin:$PATH"
+            eval "$(pyenv init --path)"
+            # Install Python 3.8.1 (required for a specific test)
             pyenv install -s 3.8.1
-            pyenv sh-shell $PYTHON_VERSION_LATEST
             export PYENV_VERSION=$PYTHON_VERSION_LATEST
-            python --version
-            export LANG="en_US.UTF-8"
-            export LC_CTYPE="en_US.UTF-8"
-            export PATH=$HOME/.local/bin:$PATH
+            # Install pipenv
             python -m pip install --user pipenv===$PIPENV_VER
             export PATH="$PATH:$HOME/.local/bin"
-            python -m pipenv --version
+            node -v && pyenv -v && python --version && python -m pipenv --version
             # Run node tests
             ./node_modules/.bin/lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           environment:
@@ -132,8 +125,10 @@ jobs:
       pipenv_version:
         type: string
     docker:
-      - image: node:<< parameters.node_version >>
+      - image: circleci/python:<< parameters.python_version >>-node
     steps:
+      - switch_node_version:
+          node_version: << parameters.node_version >>
       - checkout_and_install
       - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
@@ -212,17 +207,10 @@ workflows:
           name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
           matrix:
             parameters:
-              node_version: ["10", "12","14"]
+              node_version: ["10", "12", "14"]
               # Update the SUPPORTED.md as well if these versions change
               poetry_version:
-                [
-                  "1.1.6",
-                  "1.1.5",
-                  "1.1.4",
-                  "1.0.9",
-                  "1.0.8",
-                  "1.0.7",
-                ]
+                ["1.1.6", "1.1.5", "1.1.4", "1.0.9", "1.0.8", "1.0.7"]
               # Update the SUPPORTED.md as well if these versions change
               python_version: ["3.9", "3.8", "3.7", "3.6", "2.7"]
           filters:
