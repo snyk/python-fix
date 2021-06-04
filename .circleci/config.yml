@@ -57,6 +57,7 @@ commands:
       - run:
           name: Poetry install << parameters.python_version >> && lerna run test --scope @snyk/fix-poetry --stream
           command: |
+            apt remove --purge python3-virtualenv
             node -v && python --version && pip --version
             echo "Installing poetry version $POETRY_VERSION"
             pip install poetry==$POETRY_VERSION
