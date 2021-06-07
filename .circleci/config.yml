@@ -60,7 +60,7 @@ commands:
             node -v && python --version && pip --version
             echo "Installing poetry version $POETRY_VERSION"
             pip install poetry==$POETRY_VERSION
-            pip install --force-reinstall virtualenv
+            pip install --user virtualenv
             # Run node tests
             ./node_modules/.bin/lerna run test --scope @snyk/fix-poetry --stream
           environment:
@@ -213,7 +213,7 @@ workflows:
               poetry_version:
                 ["1.1.6", "1.1.5", "1.1.4", "1.0.9", "1.0.8", "1.0.7"]
               # Update the SUPPORTED.md as well if these versions change
-              python_version: ["3.9", "3.8", "3.7", "3.6"]
+              python_version: ["3.9", "3.8", "3.7", "3.6", "2.7"]
           filters:
             branches:
               ignore: /.*/
