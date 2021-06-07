@@ -33,7 +33,7 @@ describe('poetryAdd', () => {
     process.env = { ...OLD_ENV }; // Make a copy
   });
 
-  it.only('Fails to update any files when locking fails due to Python version requirements mismatch', async () => {
+  it('Fails to update any files when locking fails due to Python version requirements mismatch', async () => {
     // Arrange
     const targetFile = 'fails-to-lock/pyproject.toml';
     const expectedTargetFile = 'fails-to-lock/expected-pyproject.toml';
