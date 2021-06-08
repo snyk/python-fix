@@ -7,9 +7,6 @@
     "publish": {
       "conventionalCommits": true,
       "message": "chore: Publish lerna commit [skip ci]"
-    },
-    "bootstrap": {
-      "npmClientArgs": ["--no-package-lock"]
     }
   }
 }
