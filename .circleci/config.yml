@@ -24,7 +24,7 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1.0-dependencies-{{ checksum "package.json" }}
       - run:
           name: npm i root deps
           command: npm install --no-package-lock
