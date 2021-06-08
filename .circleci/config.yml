@@ -24,7 +24,7 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v2-dependencies-{{ checksum "package.json" }}
       - run:
           name: npm i root deps
           command: npm install --no-package-lock
@@ -100,7 +100,7 @@ jobs:
     steps:
       - checkout_and_install
       - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ checksum "package.json" }}
           paths:
             - ./node_modules
       - run_lerna_tests
