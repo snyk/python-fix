@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.1](https://github.com/snyk-tech-services/python-fix/compare/@snyk/child-process@0.3.0...@snyk/child-process@0.3.1) (2021-06-08)
+
+
+### Bug Fixes
+
+* declare @snyk/child-process as a dep in each package ([26d757a](https://github.com/snyk-tech-services/python-fix/commit/26d757a52b433b86ac38af67d135b9beb8326cf4))
+
+
+
+
+
 # [0.3.0](https://github.com/snyk-tech-services/python-fix/compare/@snyk/child-process@0.2.0...@snyk/child-process@0.3.0) (2021-06-03)
 
 
