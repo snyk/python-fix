@@ -24,7 +24,11 @@ commands:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v2-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-pipenv-pipfile-{{ checksum "packages/pipenv-pipfile/package.json" }}
+            - v1-dependencies-poetry-{{ checksum "packages/poetry/package.json" }}
+            - v1-dependencies-pip-requirements-{{ checksum "packages/pip-requirements/package.json" }}
+
       - run:
           name: npm i root deps
           command: npm install --no-package-lock
@@ -99,10 +103,10 @@ jobs:
       - image: circleci/node:14
     steps:
       - checkout_and_install
-      - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
+      # - save_cache:
+      #     key: v1-dependencies-{{ checksum "package.json" }}
+      #     paths:
+      #       - ./node_modules
       - run_lerna_tests
   release:
     docker:
@@ -131,6 +135,10 @@ jobs:
       - switch_node_version:
           node_version: << parameters.node_version >>
       - checkout_and_install
+      - save_cache:
+          key: v1-dependencies-pipenv-pipfile-{{ checksum "packages/pipenv-pipfile/package.json" }}
+          paths:
+            - ./packages/pipenv-pipfile/node_modules
       - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
@@ -148,6 +156,10 @@ jobs:
       - switch_node_version:
           node_version: << parameters.node_version >>
       - checkout_and_install
+      - save_cache:
+          key: v1-dependencies-poetry-{{ checksum "packages/poetry/package.json" }}
+          paths:
+            - ./packages/poetry/node_modules
       - run_test-poetry:
           python_version: << parameters.python_version >>
           poetry_version: << parameters.poetry_version >>
@@ -159,6 +171,10 @@ jobs:
       - image: node:<< parameters.node_version >>
     steps:
       - checkout_and_install
+      - save_cache:
+          key: v1-dependencies-pip-requirements-{{ checksum "packages/pip-requirements/package.json" }}
+          paths:
+            - ./packages/pip-requirements/node_modules
       - run_generic_test:
           package-name: "@snyk/fix-pip-requirements"
   test_child-process:
