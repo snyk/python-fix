@@ -33,7 +33,7 @@
   ],
   "homepage": "https://github.com/snyk-tech-services/python-fix#readme",
   "dependencies": {
-    "@snyk/child-process": "^0.3.1",
+    "@snyk/child-process": "0.3.1",
     "bottleneck": "2.19.5",
     "debug": "4.3.1",
     "prettier": "^2.3.0",
