@@ -22,9 +22,6 @@ commands:
   checkout_and_install:
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: npm i root deps
           command: npm install --no-package-lock
@@ -99,10 +96,6 @@ jobs:
       - image: circleci/node:14
     steps:
       - checkout_and_install
-      - save_cache:
-          key: v1-dependencies-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
       - run_lerna_tests
   release:
     docker:
