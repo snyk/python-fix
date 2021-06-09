@@ -26,11 +26,13 @@ commands:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
       - run:
+          command:  echo "package-lock=false" >> ~/.npmrc
+      - run:
           name: npm i root deps
           command: npm install --no-package-lock
       - run:
           name: lerna bootstrap
-          command: ./node_modules/.bin/lerna bootstrap --no-ci --ignore-scripts
+          command: ./node_modules/.bin/lerna bootstrap --no-ci
   run_lerna_tests:
     steps:
       - run:
