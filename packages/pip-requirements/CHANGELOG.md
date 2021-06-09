@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.8](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-pip-requirements@0.2.7...@snyk/fix-pip-requirements@0.2.8) (2021-06-09)
+
+
+### Bug Fixes
+
+* stop generating lockfiles in all packages ([7045d0e](https://github.com/snyk-tech-services/python-fix/commit/7045d0e3255b70800a411ca314580ba330a34c0a))
+
+
+
+
+
 ## [0.2.7](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-pip-requirements@0.2.6...@snyk/fix-pip-requirements@0.2.7) (2021-06-08)
 
 
