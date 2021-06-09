@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.5.1...@snyk/fix-poetry@0.6.0) (2021-06-09)
+
+
+### Features
+
+* add bottleneck dependency ([6cb65b3](https://github.com/snyk-tech-services/python-fix/commit/6cb65b32abb90779845dbf29d707bf390151ae44))
+* poetry add dependency@version support ([1d53910](https://github.com/snyk-tech-services/python-fix/commit/1d539105f138981b16aae02d1c25f660148e959a))
+* poetry add dependency@version support ([4c23c6c](https://github.com/snyk-tech-services/python-fix/commit/4c23c6c0266629e222c66989468a467166c3c474))
+
+
+
+
+
 ## [0.5.1](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.5.0...@snyk/fix-poetry@0.5.1) (2021-06-08)
 
 
