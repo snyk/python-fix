@@ -2,7 +2,7 @@
 name = "fails-to-lock"
 version = "0.1.0"
 description = ""
-authors = ["ghe <lili@snyk.io>"]
+authors = ["ghe <email@email.com>"]
 
 [tool.poetry.dependencies]
 python = "*"
