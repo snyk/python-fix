@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "pins-transitive-dep"
+version = "0.1.0"
+description = ""
+authors = ["ghe <email@email.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+djangorestframework = "2.3"
+mypy = "0.770"
+atomicwrites = "1.4.0"
+rsa = "3.4"
+PyYAML = "5.2"
+boto3 = "1.10.28"
+slackclient = ">=1.3.0,<2.0.0"
+tweepy = "3.9"
+Flask = "0.12.2"
+
+[tool.poetry.dev-dependencies]
+flake8 = "3.8.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
