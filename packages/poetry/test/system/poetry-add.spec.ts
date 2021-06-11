@@ -16,6 +16,7 @@ function restoreFiles(root: string, files: string[]): void {
     fs.copyFileSync(orig, restore);
   }
 }
+
 describe('poetryAdd', () => {
   let filesToDelete: string[] = [];
   const workspacesPath = pathLib.resolve(__dirname, 'workspaces');
@@ -232,4 +233,60 @@ describe('poetryAdd', () => {
   }, 90000);
 
   it.todo('With a specific Python version');
+  it.todo('With system markers Python version');
+  it('Pins transitive dependencies (100% success)', async () => {
+    // Arrange
+    const targetFile = 'with-pins/pyproject.toml';
+    const expectedTargetFile = 'with-pins/expected-pyproject.toml';
+
+    const lockFile = 'with-pins/poetry.lock';
+    // backup original files
+    backupFiles(workspacesPath, [targetFile, lockFile]);
+    // lxml is a transitive of docxtpl
+    // py is a transitive of pytest-factoryboy
+    // pygments is a transitive of ipdb
+
+    const packagesToInstall = ['lxml==4.6.2', 'py==1.10.0', 'pygments==2.7.4'];
+    // Act
+    const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
+    const res = await poetryAdd(dir, packagesToInstall, {});
+
+    // Assert
+
+    expect(res).toEqual({
+      command: 'poetry add lxml==4.6.2 py==1.10.0 pygments==2.7.4',
+      duration: expect.any(Number),
+      exitCode: 0,
+      stderr: '',
+      stdout: expect.stringContaining('lxml'),
+    });
+    const fixedFileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, targetFile),
+      'utf-8',
+    );
+    const expectedPyprojectContent = fs.readFileSync(
+      pathLib.join(workspacesPath, expectedTargetFile),
+      'utf-8',
+    );
+    // some versions of Poetry add pygments and some add Pygments to the manifest
+    expect(fixedFileContent.toLowerCase()).toEqual(
+      expectedPyprojectContent.toLowerCase(),
+    );
+
+    // verify versions in lockfiles
+    const fixedLockfileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, lockFile),
+      'utf-8',
+    );
+
+    expect(fixedLockfileContent).toContain('4.6.2');
+    expect(fixedLockfileContent).toContain('2.7.4');
+
+    // restore original files
+    restoreFiles(workspacesPath, [targetFile, lockFile]);
+    filesToDelete = [
+      pathLib.join(workspacesPath, 'with-pins/pyproject.toml.orig'),
+      pathLib.join(workspacesPath, 'with-pins/poetry.lock.orig'),
+    ];
+  }, 90000);
 });
