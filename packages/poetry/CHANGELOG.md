@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.6.1...@snyk/fix-poetry@0.7.0) (2021-06-16)
+
+
+### Features
+
+* use provided python intpreter ([fab6762](https://github.com/snyk-tech-services/python-fix/commit/fab676214bb5391d99d9b61ef32be50c214b0d39))
+
+
+
+
+
 ## [0.6.1](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.6.0...@snyk/fix-poetry@0.6.1) (2021-06-16)
 
 

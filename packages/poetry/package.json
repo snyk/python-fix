@@ -1,7 +1,7 @@
 {
   "name": "@snyk/fix-poetry",
   "description": "Snyk python ecosystem fix remediation",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "main": "dist/index.js",
   "scripts": {
     "format:check": "prettier --check '{''{lib,test}/!(fixtures)/**/*,*}.{js,ts,yml}'",
