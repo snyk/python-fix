@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.6.0...@snyk/fix-poetry@0.6.1) (2021-06-16)
+
+
+### Bug Fixes
+
+* test fixture to use correct dep version before upgrade ([98b2dd1](https://github.com/snyk-tech-services/python-fix/commit/98b2dd15796dc55d82130c202c5b8b0403c2bdc3))
+
+
+
+
+
 # [0.6.0](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.5.1...@snyk/fix-poetry@0.6.0) (2021-06-09)
 
 
