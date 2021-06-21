@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.2](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.7.1...@snyk/fix-poetry@0.7.2) (2021-06-21)
+
+
+### Bug Fixes
+
+* drop prettier from prod dependencies ([8512315](https://github.com/snyk-tech-services/python-fix/commit/851231564d7c67d5049a11c109e8d25d12c01a77))
+
+
+
+
+
 ## [0.7.1](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.7.0...@snyk/fix-poetry@0.7.1) (2021-06-17)
 
 **Note:** Version bump only for package @snyk/fix-poetry
