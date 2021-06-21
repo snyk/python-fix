@@ -34,8 +34,6 @@
   "homepage": "https://github.com/snyk-tech-services/python-fix#readme",
   "dependencies": {
     "debug": "^4.1.1",
-    "prettier": "^2.3.0",
-    "source-map-support": "^0.5.16",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
