@@ -2,8 +2,9 @@
 name: "\U0001F64F Feature Request"
 about: Submit a feature request
 title: "[\U0001F64F]"
-labels: "\U0001F64F feature request"
-assignees: ''
+labels: ''
+assignees: lili2311
+
 ---
 
 **Describe the user need**
@@ -16,4 +17,3 @@ If you have an idea how you would like this to behave please share in as much de
 **Additional context**
 
 Add any other context or screenshots about the feature request here.
-
