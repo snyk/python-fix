@@ -2,8 +2,9 @@
 name: "\U0001F41B Bug report"
 about: Submit a bug
 title: "[\U0001F41B]"
-labels: "\U0001F41B  bug"
-assignees: ''
+labels: bug
+assignees: lili2311
+
 ---
 
 Please provide all that are applicable:
@@ -31,4 +32,3 @@ If applicable, please add `DEBUG=*snyk* <command here>` before your command and 
 
 ### Screenshots
 If applicable, add screenshots to help explain your problem.
-
