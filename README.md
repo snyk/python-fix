@@ -11,6 +11,7 @@ Snyk ecosystem fix remediation strategies used with [Snyk CLI](https://github.co
 
 - Python Support
   - [Pipfile (pipenv)](packages/pipenv-pipfile/SUPPORTED.md)
+  - [Poetry](packages/poetry/SUPPORTED.md)
 
 
 ## Development setup
