@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.7.2...@snyk/fix-poetry@0.7.3) (2021-09-01)
+
+
+### Bug Fixes
+
+* upgrade debug from 4.3.1 to 4.3.2 ([477c99a](https://github.com/snyk-tech-services/python-fix/commit/477c99ac12e3de911274ad0ad2fc55d439f390c2))
+
+
+
+
+
 ## [0.7.2](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.7.1...@snyk/fix-poetry@0.7.2) (2021-06-21)
 
 
