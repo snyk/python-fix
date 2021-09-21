@@ -159,7 +159,6 @@ describe('poetryAdd', () => {
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
     const res = await poetryAdd(dir, packagesToInstall, {});
-
     // Assert
     expect(res).toEqual({
       command: 'poetry add six==1.16.0',
@@ -208,7 +207,8 @@ describe('poetryAdd', () => {
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
     const res = await poetryAdd(dir, packagesToInstall, { python: 'python2' });
-
+    // eslint-disable-next-line no-console
+    console.log(res);
     // Assert
     expect(res).toEqual({
       command: 'poetry add six==1.16.0',
