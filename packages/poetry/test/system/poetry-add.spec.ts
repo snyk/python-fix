@@ -159,7 +159,6 @@ describe('poetryAdd', () => {
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
     const res = await poetryAdd(dir, packagesToInstall, {});
-
     // Assert
     expect(res).toEqual({
       command: 'poetry add six==1.16.0',
@@ -195,6 +194,81 @@ describe('poetryAdd', () => {
       pathLib.join(workspacesPath, 'simple/poetry.lock.orig'),
     ];
   }, 90000);
+  it('applies expected changes to pyproject.toml (100% success) for a dev dependency', async () => {
+    // Arrange
+    const targetFile = 'with-dev-deps/pyproject.toml';
+    const expectedTargetFile = 'with-dev-deps/expected-pyproject.toml';
+
+    const lockFile = 'with-dev-deps/poetry.lock';
+    // backup original files
+    backupFiles(workspacesPath, [targetFile, lockFile]);
+    const packagesToInstall = ['json-api==0.1.22'];
+    // Act
+    const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
+    const res = await poetryAdd(dir, packagesToInstall, { dev: true });
+
+    // Assert
+
+    expect(res).toEqual({
+      command: 'poetry add json-api==0.1.22 --dev',
+      duration: expect.any(Number),
+      exitCode: 0,
+      stderr: '',
+      stdout: expect.stringContaining('json-api'),
+    });
+    const fixedFileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, targetFile),
+      'utf-8',
+    );
+    const expectedPyprojectContent = fs.readFileSync(
+      pathLib.join(workspacesPath, expectedTargetFile),
+      'utf-8',
+    );
+    expect(fixedFileContent).toEqual(expectedPyprojectContent);
+
+    // verify versions in lockfiles
+    const fixedLockfileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, lockFile),
+      'utf-8',
+    );
+
+    expect(poetryAddSpy).toBeCalledTimes(1);
+    // lockfile still has original version
+    expect(fixedLockfileContent).toContain('dev');
+    expect(fixedLockfileContent).toContain('0.1.22');
+
+    // restore original files
+    restoreFiles(workspacesPath, [targetFile, lockFile]);
+    filesToDelete = [
+      pathLib.join(workspacesPath, 'with-dev-deps/pyproject.toml.orig'),
+      pathLib.join(workspacesPath, 'with-dev-deps/poetry.lock.orig'),
+    ];
+  }, 90000);
+
+  it.todo('With a specific Python version');
+  it.todo('With system markers Python version');
+});
+
+describe('poetryAdd failing tests', () => {
+  let filesToDelete: string[] = [];
+  const workspacesPath = pathLib.resolve(__dirname, 'workspaces');
+  const OLD_ENV = process.env;
+
+  let poetryAddSpy: jest.SpyInstance;
+
+  afterEach(() => {
+    poetryAddSpy.mockRestore();
+    filesToDelete.map((f) => fs.unlinkSync(f));
+  });
+
+  afterAll(() => {
+    process.env = OLD_ENV; // Restore old environment
+  });
+
+  beforeEach(() => {
+    poetryAddSpy = jest.spyOn(snykChildProcess, 'execute');
+    process.env = { ...OLD_ENV }; // Make a copy
+  });
 
   it('applies expected changes to pyproject.toml (100% success) with python2', async () => {
     // Arrange
@@ -260,59 +334,6 @@ describe('poetryAdd', () => {
     ];
   }, 90000);
 
-  it('applies expected changes to pyproject.toml (100% success) for a dev dependency', async () => {
-    // Arrange
-    const targetFile = 'with-dev-deps/pyproject.toml';
-    const expectedTargetFile = 'with-dev-deps/expected-pyproject.toml';
-
-    const lockFile = 'with-dev-deps/poetry.lock';
-    // backup original files
-    backupFiles(workspacesPath, [targetFile, lockFile]);
-    const packagesToInstall = ['json-api==0.1.22'];
-    // Act
-    const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
-    const res = await poetryAdd(dir, packagesToInstall, { dev: true });
-
-    // Assert
-
-    expect(res).toEqual({
-      command: 'poetry add json-api==0.1.22 --dev',
-      duration: expect.any(Number),
-      exitCode: 0,
-      stderr: '',
-      stdout: expect.stringContaining('json-api'),
-    });
-    const fixedFileContent = fs.readFileSync(
-      pathLib.join(workspacesPath, targetFile),
-      'utf-8',
-    );
-    const expectedPyprojectContent = fs.readFileSync(
-      pathLib.join(workspacesPath, expectedTargetFile),
-      'utf-8',
-    );
-    expect(fixedFileContent).toEqual(expectedPyprojectContent);
-
-    // verify versions in lockfiles
-    const fixedLockfileContent = fs.readFileSync(
-      pathLib.join(workspacesPath, lockFile),
-      'utf-8',
-    );
-
-    expect(poetryAddSpy).toBeCalledTimes(1);
-    // lockfile still has original version
-    expect(fixedLockfileContent).toContain('dev');
-    expect(fixedLockfileContent).toContain('0.1.22');
-
-    // restore original files
-    restoreFiles(workspacesPath, [targetFile, lockFile]);
-    filesToDelete = [
-      pathLib.join(workspacesPath, 'with-dev-deps/pyproject.toml.orig'),
-      pathLib.join(workspacesPath, 'with-dev-deps/poetry.lock.orig'),
-    ];
-  }, 90000);
-
-  it.todo('With a specific Python version');
-  it.todo('With system markers Python version');
   it('Pins transitive dependencies (100% success)', async () => {
     // Arrange
     const targetFile = 'with-pins/pyproject.toml';
