@@ -905,7 +905,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.7.0"
+python-versions = "*"
 content-hash = "0fcb567d7c4e40f82796dc7a1f7bbbd1f5299f49ac6f21cd3276113f91a59431"
 
 [metadata.files]
