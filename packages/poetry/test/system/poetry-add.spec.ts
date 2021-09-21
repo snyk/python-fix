@@ -115,7 +115,7 @@ describe('poetryAdd', () => {
       command: 'poetry add non-existent==1.16.16',
       duration: expect.any(Number),
       exitCode: 1,
-      stderr: '',
+      stderr: expect.any(String),
       stdout: expect.stringContaining(
         'Could not find a matching version of package non-existent',
       ),
@@ -164,7 +164,7 @@ describe('poetryAdd', () => {
       command: 'poetry add six==1.16.0',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: '',
+      stderr: expect.any(String),
       stdout: expect.stringContaining('Installing six'),
     });
     const fixedFileContent = fs.readFileSync(
@@ -195,7 +195,7 @@ describe('poetryAdd', () => {
     ];
   }, 90000);
 
-  it.only('applies expected changes to pyproject.toml (100% success) with python2', async () => {
+  it('applies expected changes to pyproject.toml (100% success) with python2', async () => {
     // Arrange
     const targetFile = 'with-interpreter/pyproject.toml';
     const expectedTargetFile = 'with-interpreter/expected-pyproject.toml';
@@ -207,14 +207,12 @@ describe('poetryAdd', () => {
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
     const res = await poetryAdd(dir, packagesToInstall, { python: 'python2' });
-    // eslint-disable-next-line no-console
-    console.log('******', res);
     // Assert
     expect(res).toEqual({
       command: 'poetry add six==1.16.0',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: '',
+      stderr: expect.any(String),
       stdout: expect.stringContaining('Installing six'),
     });
     const fixedFileContent = fs.readFileSync(
@@ -279,7 +277,7 @@ describe('poetryAdd', () => {
       command: 'poetry add json-api==0.1.22 --dev',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: '',
+      stderr: expect.any(String),
       stdout: expect.stringContaining('json-api'),
     });
     const fixedFileContent = fs.readFileSync(
@@ -336,7 +334,7 @@ describe('poetryAdd', () => {
       command: 'poetry add lxml==4.6.2 py==1.10.0 pygments==2.7.4',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: '',
+      stderr: expect.any(String),
       stdout: expect.stringContaining('lxml'),
     });
     const fixedFileContent = fs.readFileSync(
