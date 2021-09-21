@@ -67,7 +67,7 @@ describe('poetryAdd', () => {
       // depending on poetry version this may have some data
       // poetry 1.0.* is affected
       stderr: expect.any(String),
-      stdout: expect.stringContaining('fails-to-lock'),
+      stdout: expect.stringContaining('NoCompatiblePythonVersionFound'),
     });
     const fixedFileContent = fs.readFileSync(
       pathLib.join(workspacesPath, targetFile),
