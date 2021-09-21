@@ -67,7 +67,7 @@ describe('poetryAdd', () => {
       // depending on poetry version this may have some data
       // poetry 1.0.* is affected
       stderr: expect.any(String),
-      stdout: expect.stringContaining('fails-to-lock'),
+      stdout: expect.stringContaining('NoCompatiblePythonVersionFound'),
     });
     const fixedFileContent = fs.readFileSync(
       pathLib.join(workspacesPath, targetFile),
@@ -115,7 +115,7 @@ describe('poetryAdd', () => {
       command: 'poetry add non-existent==1.16.16',
       duration: expect.any(Number),
       exitCode: 1,
-      stderr: '',
+      stderr: expect.any(String),
       stdout: expect.stringContaining(
         'Could not find a matching version of package non-existent',
       ),
@@ -159,13 +159,12 @@ describe('poetryAdd', () => {
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
     const res = await poetryAdd(dir, packagesToInstall, {});
-
     // Assert
     expect(res).toEqual({
       command: 'poetry add six==1.16.0',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: '',
+      stderr: expect.any(String),
       stdout: expect.stringContaining('Installing six'),
     });
     const fixedFileContent = fs.readFileSync(
@@ -195,6 +194,59 @@ describe('poetryAdd', () => {
       pathLib.join(workspacesPath, 'simple/poetry.lock.orig'),
     ];
   }, 90000);
+  it('applies expected changes to pyproject.toml (100% success) for a dev dependency', async () => {
+    // Arrange
+    const targetFile = 'with-dev-deps/pyproject.toml';
+    const expectedTargetFile = 'with-dev-deps/expected-pyproject.toml';
+
+    const lockFile = 'with-dev-deps/poetry.lock';
+    // backup original files
+    backupFiles(workspacesPath, [targetFile, lockFile]);
+    const packagesToInstall = ['json-api==0.1.22'];
+    // Act
+    const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
+    const res = await poetryAdd(dir, packagesToInstall, { dev: true });
+
+    // Assert
+
+    expect(res).toEqual({
+      command: 'poetry add json-api==0.1.22 --dev',
+      duration: expect.any(Number),
+      exitCode: 0,
+      stderr: expect.any(String),
+      stdout: expect.stringContaining('json-api'),
+    });
+    const fixedFileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, targetFile),
+      'utf-8',
+    );
+    const expectedPyprojectContent = fs.readFileSync(
+      pathLib.join(workspacesPath, expectedTargetFile),
+      'utf-8',
+    );
+    expect(fixedFileContent).toEqual(expectedPyprojectContent);
+
+    // verify versions in lockfiles
+    const fixedLockfileContent = fs.readFileSync(
+      pathLib.join(workspacesPath, lockFile),
+      'utf-8',
+    );
+
+    expect(poetryAddSpy).toBeCalledTimes(1);
+    // lockfile still has original version
+    expect(fixedLockfileContent).toContain('dev');
+    expect(fixedLockfileContent).toContain('0.1.22');
+
+    // restore original files
+    restoreFiles(workspacesPath, [targetFile, lockFile]);
+    filesToDelete = [
+      pathLib.join(workspacesPath, 'with-dev-deps/pyproject.toml.orig'),
+      pathLib.join(workspacesPath, 'with-dev-deps/poetry.lock.orig'),
+    ];
+  }, 90000);
+
+  it.todo('With a specific Python version');
+  it.todo('With system markers Python version');
 
   it('applies expected changes to pyproject.toml (100% success) with python2', async () => {
     // Arrange
@@ -204,18 +256,18 @@ describe('poetryAdd', () => {
     const lockFile = 'with-interpreter/poetry.lock';
     // backup original files
     backupFiles(workspacesPath, [targetFile, lockFile]);
-    const packagesToInstall = ['six==1.16.0'];
+    const packagesToInstall = ['pyasn1==0.4.8'];
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
     const res = await poetryAdd(dir, packagesToInstall, { python: 'python2' });
 
     // Assert
     expect(res).toEqual({
-      command: 'poetry add six==1.16.0',
+      command: 'poetry add pyasn1==0.4.8',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: '',
-      stdout: expect.stringContaining('Installing six'),
+      stderr: expect.any(String),
+      stdout: expect.stringContaining('Installing pyasn1'),
     });
     const fixedFileContent = fs.readFileSync(
       pathLib.join(workspacesPath, targetFile),
@@ -250,7 +302,7 @@ describe('poetryAdd', () => {
     expect(poetryAddSpy).toBeCalledTimes(3);
 
     // lockfile still has original version
-    expect(fixedLockfileContent).toContain('1.16.0');
+    expect(fixedLockfileContent).toContain('0.4.8');
 
     // restore original files
     restoreFiles(workspacesPath, [targetFile, lockFile]);
@@ -259,60 +311,6 @@ describe('poetryAdd', () => {
       pathLib.join(workspacesPath, 'with-interpreter/poetry.lock.orig'),
     ];
   }, 90000);
-
-  it('applies expected changes to pyproject.toml (100% success) for a dev dependency', async () => {
-    // Arrange
-    const targetFile = 'with-dev-deps/pyproject.toml';
-    const expectedTargetFile = 'with-dev-deps/expected-pyproject.toml';
-
-    const lockFile = 'with-dev-deps/poetry.lock';
-    // backup original files
-    backupFiles(workspacesPath, [targetFile, lockFile]);
-    const packagesToInstall = ['json-api==0.1.22'];
-    // Act
-    const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
-    const res = await poetryAdd(dir, packagesToInstall, { dev: true });
-
-    // Assert
-
-    expect(res).toEqual({
-      command: 'poetry add json-api==0.1.22 --dev',
-      duration: expect.any(Number),
-      exitCode: 0,
-      stderr: '',
-      stdout: expect.stringContaining('json-api'),
-    });
-    const fixedFileContent = fs.readFileSync(
-      pathLib.join(workspacesPath, targetFile),
-      'utf-8',
-    );
-    const expectedPyprojectContent = fs.readFileSync(
-      pathLib.join(workspacesPath, expectedTargetFile),
-      'utf-8',
-    );
-    expect(fixedFileContent).toEqual(expectedPyprojectContent);
-
-    // verify versions in lockfiles
-    const fixedLockfileContent = fs.readFileSync(
-      pathLib.join(workspacesPath, lockFile),
-      'utf-8',
-    );
-
-    expect(poetryAddSpy).toBeCalledTimes(1);
-    // lockfile still has original version
-    expect(fixedLockfileContent).toContain('dev');
-    expect(fixedLockfileContent).toContain('0.1.22');
-
-    // restore original files
-    restoreFiles(workspacesPath, [targetFile, lockFile]);
-    filesToDelete = [
-      pathLib.join(workspacesPath, 'with-dev-deps/pyproject.toml.orig'),
-      pathLib.join(workspacesPath, 'with-dev-deps/poetry.lock.orig'),
-    ];
-  }, 90000);
-
-  it.todo('With a specific Python version');
-  it.todo('With system markers Python version');
   it('Pins transitive dependencies (100% success)', async () => {
     // Arrange
     const targetFile = 'with-pins/pyproject.toml';
@@ -321,23 +319,20 @@ describe('poetryAdd', () => {
     const lockFile = 'with-pins/poetry.lock';
     // backup original files
     backupFiles(workspacesPath, [targetFile, lockFile]);
-    // lxml is a transitive of docxtpl
-    // py is a transitive of pytest-factoryboy
     // pygments is a transitive of ipdb
 
-    const packagesToInstall = ['lxml==4.6.2', 'py==1.10.0', 'pygments==2.7.4'];
+    const packagesToInstall = ['future==0.11.1'];
     // Act
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
     const res = await poetryAdd(dir, packagesToInstall, {});
 
     // Assert
-
     expect(res).toEqual({
-      command: 'poetry add lxml==4.6.2 py==1.10.0 pygments==2.7.4',
+      command: 'poetry add future==0.11.1',
       duration: expect.any(Number),
       exitCode: 0,
-      stderr: '',
-      stdout: expect.stringContaining('lxml'),
+      stderr: expect.any(String),
+      stdout: expect.stringContaining('future'),
     });
     const fixedFileContent = fs.readFileSync(
       pathLib.join(workspacesPath, targetFile),
@@ -358,8 +353,7 @@ describe('poetryAdd', () => {
       'utf-8',
     );
 
-    expect(fixedLockfileContent).toContain('4.6.2');
-    expect(fixedLockfileContent).toContain('2.7.4');
+    expect(fixedLockfileContent).toContain('0.11.1');
 
     // restore original files
     restoreFiles(workspacesPath, [targetFile, lockFile]);
