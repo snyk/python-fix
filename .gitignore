@@ -7,3 +7,4 @@ dist
 .eslintcache
 .idea
 tsconfig.tsbuildinfo
+.dccache
