@@ -147,7 +147,7 @@ describe('poetryAdd', () => {
     ];
   }, 90000);
 
-  it('applies expected changes to pyproject.toml (100% success)', async () => {
+  it.only('applies expected changes to pyproject.toml (100% success)', async () => {
     // Arrange
     const targetFile = 'simple/pyproject.toml';
     const expectedTargetFile = 'simple/expected-pyproject.toml';
