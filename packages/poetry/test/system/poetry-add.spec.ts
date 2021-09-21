@@ -195,7 +195,7 @@ describe('poetryAdd', () => {
     ];
   }, 90000);
 
-  it('applies expected changes to pyproject.toml (100% success) with python2', async () => {
+  it.only('applies expected changes to pyproject.toml (100% success) with python2', async () => {
     // Arrange
     const targetFile = 'with-interpreter/pyproject.toml';
     const expectedTargetFile = 'with-interpreter/expected-pyproject.toml';
@@ -208,7 +208,7 @@ describe('poetryAdd', () => {
     const { dir } = pathLib.parse(pathLib.resolve(workspacesPath, targetFile));
     const res = await poetryAdd(dir, packagesToInstall, { python: 'python2' });
     // eslint-disable-next-line no-console
-    console.log(res);
+    console.log('******', res);
     // Assert
     expect(res).toEqual({
       command: 'poetry add six==1.16.0',
