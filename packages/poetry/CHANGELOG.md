@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.8.0](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.7.3...@snyk/fix-poetry@0.8.0) (2021-09-23)
+
+
+### Features
+
+* support poetry 1.1.9, 1.1.8 and 1.1.7 ([a1183df](https://github.com/snyk-tech-services/python-fix/commit/a1183df1e5cb801be2cb088ce5925d697a09f8f4))
+
+
+
+
+
 ## [0.7.3](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.7.2...@snyk/fix-poetry@0.7.3) (2021-09-01)
 
 
