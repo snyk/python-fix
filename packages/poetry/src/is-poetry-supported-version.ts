@@ -6,6 +6,9 @@ export function isPoetrySupportedVersion(
   // Not all versions listed below as not all are tested but most likely
   // they are supported
   const SUPPORTED_POETRY_VERSIONS = [
+    '1.1.9',
+    '1.1.8',
+    '1.1.7',
     '1.1.6',
     '1.1.5',
     '1.1.4',
