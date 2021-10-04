@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.1](https://github.com/snyk/python-fix/compare/@snyk/fix-poetry@0.8.0...@snyk/fix-poetry@0.8.1) (2021-10-04)
+
+**Note:** Version bump only for package @snyk/fix-poetry
+
+
+
+
+
 # [0.8.0](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-poetry@0.7.3...@snyk/fix-poetry@0.8.0) (2021-09-23)
 
 

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.10](https://github.com/snyk/python-fix/compare/@snyk/fix-pip-requirements@0.2.9...@snyk/fix-pip-requirements@0.2.10) (2021-10-04)
+
+**Note:** Version bump only for package @snyk/fix-pip-requirements
+
+
+
+
+
 ## [0.2.9](https://github.com/snyk-tech-services/python-fix/compare/@snyk/fix-pip-requirements@0.2.8...@snyk/fix-pip-requirements@0.2.9) (2021-06-21)
 
 

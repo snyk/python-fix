@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.2](https://github.com/snyk/python-fix/compare/@snyk/child-process@0.3.1...@snyk/child-process@0.3.2) (2021-10-04)
+
+
+### Bug Fixes
+
+* add child-process lock ([a10cf81](https://github.com/snyk/python-fix/commit/a10cf818b22056d3210d97404d7506730f016695))
+* stop generating lockfiles in all packages ([7045d0e](https://github.com/snyk/python-fix/commit/7045d0e3255b70800a411ca314580ba330a34c0a))
+
+
+
+
+
 ## [0.3.1](https://github.com/snyk-tech-services/python-fix/compare/@snyk/child-process@0.3.0...@snyk/child-process@0.3.1) (2021-06-08)
 
 
