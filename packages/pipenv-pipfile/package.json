@@ -35,7 +35,7 @@
   "dependencies": {
     "@snyk/child-process": "^0.3.2",
     "bottleneck": "2.19.5",
-    "debug": "4.3.1",
+    "debug": "4.3.4",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
