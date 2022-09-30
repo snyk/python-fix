@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.3.3](https://github.com/snyk/python-fix/compare/@snyk/child-process@0.3.2...@snyk/child-process@0.3.3) (2022-09-30)
+
+
+### Bug Fixes
+
+* disable shell ([a694c40](https://github.com/snyk/python-fix/commit/a694c40ba047c7e16944766add8574c518f3d3b0))
+
+
+
+
+
 ## [0.3.2](https://github.com/snyk/python-fix/compare/@snyk/child-process@0.3.1...@snyk/child-process@0.3.2) (2021-10-04)
 
 
