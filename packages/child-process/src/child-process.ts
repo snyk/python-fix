@@ -18,7 +18,7 @@ export async function execute(
   options: { cwd?: string },
 ): Promise<ExecuteResponse> {
   const spawnOptions: SpawnOptions = {
-    shell: true,
+    shell: false,
     detached: true, // do not send signals to child processes
   };
   if (options && options.cwd) {
