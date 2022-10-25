@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/snyk/python-fix/compare/@snyk/fix-pipenv-pipfile@0.5.6...@snyk/fix-pipenv-pipfile@0.6.0) (2022-10-25)
+
+
+### Features
+
+* add support for poetry Python 3.10 ([b7c20c3](https://github.com/snyk/python-fix/commit/b7c20c36ddcaf71672eb9e9c5890444ab3f5e136))
+* drop Python 2.7 add 3.10 ([62487af](https://github.com/snyk/python-fix/commit/62487af5f467a3345e31326a537e4f75860bfec1))
+* test on 2022 pipenv releases ([de9b398](https://github.com/snyk/python-fix/commit/de9b3980776791318e6ae122510b85ead725b275))
+
+
+
+
+
 ## [0.5.6](https://github.com/snyk/python-fix/compare/@snyk/fix-pipenv-pipfile@0.5.5...@snyk/fix-pipenv-pipfile@0.5.6) (2022-09-30)
 
 **Note:** Version bump only for package @snyk/fix-pipenv-pipfile
