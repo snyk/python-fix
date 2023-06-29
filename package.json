@@ -6,10 +6,11 @@
     "test:ci": "node run_test.js"
   },
   "devDependencies": {
-    "eslint": "7.25.0",
-    "@typescript-eslint/parser": "^4.26.0",
-    "eslint-config-prettier": "8.3.0",
-    "lerna": "^4.0.0",
-    "prettier": "^1.19.1"
+    "@typescript-eslint/eslint-plugin": "^5.60.1",
+    "@typescript-eslint/parser": "^5.60.1",
+    "eslint": "8.43.0",
+    "eslint-config-prettier": "8.8.0",
+    "lerna": "^6.6.2",
+    "prettier": "^2.8.8"
   }
 }
