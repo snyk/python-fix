@@ -98,7 +98,7 @@ commands:
 jobs:
   build-test:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:lts
     steps:
       - checkout_and_install
       - save_cache:
@@ -108,7 +108,7 @@ jobs:
       - run_lerna_tests
   release:
     docker:
-      - image: circleci/node:14
+      - image: cimg/node:lts
     steps:
       - checkout_and_install
       - run:
@@ -128,7 +128,7 @@ jobs:
       pipenv_version:
         type: string
     docker:
-      - image: circleci/python:<< parameters.python_version >>-node
+      - image: cimg/python:<< parameters.python_version >>-node
     steps:
       - switch_node_version:
           node_version: << parameters.node_version >>
@@ -145,7 +145,7 @@ jobs:
       poetry_version:
         type: string
     docker:
-      - image: circleci/python:<< parameters.python_version >>-node
+      - image: cimg/python:<< parameters.python_version >>-node
     steps:
       - switch_node_version:
           node_version: << parameters.node_version >>
@@ -178,7 +178,7 @@ workflows:
   build-test:
     jobs:
       - build-test:
-          context: nodejs-lib-release
+          context: nodejs-app-release-public
           filters:
             branches:
               ignore:
@@ -249,7 +249,7 @@ workflows:
                 - /test_@snyk\/child-process.*/
       - release:
           name: Release
-          context: nodejs-lib-release
+          context: nodejs-app-release-public
           filters:
             branches:
               only:
