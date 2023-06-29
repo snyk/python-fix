@@ -15,11 +15,20 @@ Snyk ecosystem fix remediation strategies used with [Snyk CLI](https://github.co
 
 
 ## Development setup
-- `npm i`
-- `lerna bootstrap`
+- `npm install`
+- `npx lerna bootstrap`
 
 ### Running tests
 `lerna test`
 
 ### Running individual package tests
 `lerna run test --scope <package_name_from_package_json> --stream`
+
+### Upgrading dependencies
+
+Simplest way is to use global `npm-check-updates` package to update package.json.
+
+```
+npx lerna exec -- npx npm-check-updates -u
+npx lerna exec -- npm install
+```
