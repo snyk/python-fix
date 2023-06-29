@@ -25,7 +25,7 @@ export async function isPoetryInstalled(): Promise<{
     res = await execute('poetry', ['--version'], {});
   } catch (e) {
     debug('Execute failed with', e);
-    res = e;
+    res = e as ExecuteResponse;
   }
   if (res.exitCode !== 0) {
     throw res.error;

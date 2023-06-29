@@ -1,5 +1,5 @@
-import * as debugLib from 'debug';
 import Bottleneck from 'bottleneck';
+import * as debugLib from 'debug';
 
 import { execute, ExecuteResponse } from '@snyk/child-process';
 
@@ -44,7 +44,7 @@ async function runPipenvInstall(
     });
   } catch (e) {
     debug('Execute failed with', e);
-    res = e;
+    res = e as ExecuteResponse;
   }
 
   return res;
