@@ -178,7 +178,7 @@ workflows:
   build-test:
     jobs:
       - build-test:
-          context: nodejs-app-release-public
+          context: snyk/python-fix/circleci
           filters:
             branches:
               ignore:
@@ -249,7 +249,7 @@ workflows:
                 - /test_@snyk\/child-process.*/
       - release:
           name: Release
-          context: nodejs-app-release-public
+          context: snyk/python-fix/circleci
           filters:
             branches:
               only:
