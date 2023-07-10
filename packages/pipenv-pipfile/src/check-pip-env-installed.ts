@@ -1,5 +1,5 @@
-import * as debugLib from 'debug';
 import { execute, ExecuteResponse } from '@snyk/child-process';
+import * as debugLib from 'debug';
 
 const debug = debugLib('snyk-fix:python:Pipfile');
 
@@ -24,7 +24,7 @@ export async function isPipenvInstalled(): Promise<{
     res = await execute('pipenv', ['--version'], {});
   } catch (e) {
     debug('Execute failed with', e);
-    res = e;
+    res = e as ExecuteResponse;
   }
   if (res.exitCode !== 0) {
     throw res.error;

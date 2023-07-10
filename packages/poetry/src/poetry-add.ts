@@ -1,5 +1,5 @@
-import * as debugLib from 'debug';
 import Bottleneck from 'bottleneck';
+import * as debugLib from 'debug';
 
 import { execute, ExecuteResponse } from '@snyk/child-process';
 
@@ -45,7 +45,7 @@ async function runPoetryAdd(
     });
   } catch (e) {
     debug('Execute failed with', e);
-    res = e;
+    res = e as ExecuteResponse;
   }
 
   if (config.python) {
