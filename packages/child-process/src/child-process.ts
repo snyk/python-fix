@@ -17,7 +17,23 @@ export async function execute(
   args: string[],
   options: { cwd?: string },
 ): Promise<ExecuteResponse> {
+  // WARN: Snyk CLI uses an internal proxy configuration that interferes
+  // with network requests made by subprocesses. In order to bypass this
+  // we reset the relevant environment variables to their defaults that
+  // the CLI has cached.
+  const env: NodeJS.ProcessEnv = {};
+  if (typeof process.env.SNYK_SYSTEM_HTTP_PROXY !== 'undefined') {
+    env.HTTP_PROXY = process.env.SNYK_SYSTEM_HTTP_PROXY;
+  }
+  if (typeof process.env.SNYK_SYSTEM_HTTPS_PROXY !== 'undefined') {
+    env.HTTPS_PROXY = process.env.SNYK_SYSTEM_HTTPS_PROXY;
+  }
+  if (typeof process.env.SNYK_SYSTEM_NO_PROXY !== 'undefined') {
+    env.NO_PROXY = process.env.SNYK_SYSTEM_NO_PROXY;
+  }
+
   const spawnOptions: SpawnOptions = {
+    env,
     shell: false,
     detached: true, // do not send signals to child processes
   };
