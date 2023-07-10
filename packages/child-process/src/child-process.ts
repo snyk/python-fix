@@ -1,4 +1,4 @@
-import { spawn, SpawnOptions } from 'child_process';
+import { spawn, SpawnOptionsWithoutStdio } from 'child_process';
 
 export interface ExecuteResponse {
   exitCode: number | null;
@@ -17,18 +17,34 @@ export async function execute(
   args: string[],
   options: { cwd?: string },
 ): Promise<ExecuteResponse> {
-  const spawnOptions: SpawnOptions = {
+  // WARN: Snyk CLI uses an internal proxy configuration that interferes
+  // with network requests made by subprocesses. In order to bypass this
+  // we reset the relevant environment variables to their defaults that
+  // the CLI has cached.
+  const env: NodeJS.ProcessEnv = { ...process.env };
+  if (typeof process.env.SNYK_SYSTEM_HTTP_PROXY !== 'undefined') {
+    env.HTTP_PROXY = process.env.SNYK_SYSTEM_HTTP_PROXY;
+  }
+  if (typeof process.env.SNYK_SYSTEM_HTTPS_PROXY !== 'undefined') {
+    env.HTTPS_PROXY = process.env.SNYK_SYSTEM_HTTPS_PROXY;
+  }
+  if (typeof process.env.SNYK_SYSTEM_NO_PROXY !== 'undefined') {
+    env.NO_PROXY = process.env.SNYK_SYSTEM_NO_PROXY;
+  }
+
+  const spawnOptions: SpawnOptionsWithoutStdio = {
+    env,
     shell: false,
     detached: true, // do not send signals to child processes
   };
   if (options && options.cwd) {
     spawnOptions.cwd = options.cwd;
   }
-  const fullCommand = `${command} ${args.join(' ')}`;
+  const fullCommand = `${command} ${args.join(' ')}`.trim();
   const startTime = Date.now();
   let processId;
   try {
-    const worker = spawn(command, args, options);
+    const worker = spawn(command, args, spawnOptions);
     processId = worker.pid;
     return await new Promise((resolve, reject) => {
       let stderr = '';
