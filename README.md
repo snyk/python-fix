@@ -32,3 +32,9 @@ Simplest way is to use global `npm-check-updates` package to update package.json
 npx lerna exec -- npx npm-check-updates -u
 npx lerna exec -- npm install
 ```
+
+### CircleCI Configuration
+
+We use CircleCI to run our continuous integration pipeline for the repository. Certain jobs require write permissions to push tags back to the GitHub org, permissions are managed via a read/write deploy key managed under the project settings in CircleCI. The credentials for the account can be found in 1Password under the `snyk/python-fix deploy key` entry.
+
+The GH_TOKEN and NPM_TOKEN environment variables are also provided via the `snyk/python-fix/circleci` CircleCI context. Details for these can be found under the `team-fix@snyk.io` entry in 1Password. 
