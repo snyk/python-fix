@@ -235,23 +235,21 @@ workflows:
           name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
-              # node_version: ["12", "14", "16"]
-              node_version: ["12"]
+              node_version: ["12", "14", "16"]
               # Update the SUPPORTED.md as well if these versions change
               pipenv_version:
                 [
                   "2022.10.12",
-                  # "2022.9.21",
-                  # "2022.8.31",
-                  # "2022.7.24",
-                  # "2022.6.7",
-                  # "2022.5.2",
-                  # "2022.4.21",
-                  # "2021.11.23"
+                  "2022.9.21",
+                  "2022.8.31",
+                  "2022.7.24",
+                  "2022.6.7",
+                  "2022.5.2",
+                  "2022.4.21",
+                  "2021.11.23"
                 ]
               # Update the SUPPORTED.md as well if these versions change
-              # python_version: ["3.10", "3.9", "3.8", "3.7"]
-              python_version: ["3.10"]
+              python_version: ["3.10", "3.9", "3.8", "3.7"]
       - check_package_changed:
           name: Check @snyk/fix-poetry changed
           package: fix-poetry
@@ -261,15 +259,12 @@ workflows:
           name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
           matrix:
             parameters:
-              # node_version: ["12", "14", "16"]
-              node_version: ["12"]
+              node_version: ["12", "14", "16"]
               # Update the SUPPORTED.md as well if these versions change
               poetry_version:
-                # ["1.1.6", "1.1.5", "1.1.4", "1.0.9", "1.0.8", "1.0.7"]
-                ["1.0.7"]
+                ["1.1.6", "1.1.5", "1.1.4", "1.0.9", "1.0.8", "1.0.7"]
               # Update the SUPPORTED.md as well if these versions change
-              # python_version: ["3.10", "3.9", "3.8", "3.7"]
-              python_version: ["3.10"]
+              python_version: ["3.10", "3.9", "3.8", "3.7"]
       - check_package_changed:
           name: Check @snyk/fix-pip-requirements changed
           package: fix-pip-requirements
@@ -279,8 +274,7 @@ workflows:
           name: Package pip-requirements | Node.js << matrix.node_version >>
           matrix:
             parameters:
-              # node_version: ["12", "14", "16"]
-              node_version: ["12"]
+              node_version: ["12", "14", "16"]
       - check_package_changed:
           name: Check @snyk/child-process changed
           package: child-process
@@ -290,8 +284,7 @@ workflows:
           name: Package child-process | Node.js << matrix.node_version >>
           matrix:
             parameters:
-              # node_version: ["12", "14", "16"]
-              node_version: ["12"]
+              node_version: ["12", "14", "16"]
       - release:
           name: Release
           context: snyk/python-fix/circleci
