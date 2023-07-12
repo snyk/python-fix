@@ -21,7 +21,7 @@ export async function execute(
   // with network requests made by subprocesses. In order to bypass this
   // we reset the relevant environment variables to their defaults that
   // the CLI has cached.
-  const env: NodeJS.ProcessEnv = {};
+  const env: NodeJS.ProcessEnv = Object.assign({}, process.env);
   if (typeof process.env.SNYK_SYSTEM_HTTP_PROXY !== 'undefined') {
     env.HTTP_PROXY = process.env.SNYK_SYSTEM_HTTP_PROXY;
   }
