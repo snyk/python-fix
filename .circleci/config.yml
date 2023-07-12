@@ -97,10 +97,9 @@ commands:
           name: npm run ci:test --prefix packages/pipenv-pipfile
           command: |
             # Install pyenv
-            rm -rf "$PYENV_ROOT"
-            curl https://pyenv.run | $SHELL
             export PYENV_ROOT="$HOME/.pyenv"
             export PATH="$PYENV_ROOT/bin:$PATH"
+            [ ! -d "$PYENV_ROOT" ] && curl https://pyenv.run | $SHELL
             eval "$(pyenv init --path)"
             # Install Python 3.8.1 (required for a specific test)
             pyenv install -s 3.8.1
@@ -145,7 +144,7 @@ jobs:
     docker:
       - image: cimg/node:lts
     steps:
-      - checkout_and_install
+      - checkout_and_install:
           skip-bootstrap: true
       - run: npx lerna changed --loglevel error --json | jq -r '.[].name' | grep @snyk/<< parameters.package >>
   test_pipenv-pipfile:
