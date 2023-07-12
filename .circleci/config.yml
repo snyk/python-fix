@@ -22,6 +22,10 @@ commands:
             NODE_VERSION: << parameters.node_version >>
 
   checkout_and_install:
+    parameters:
+      skip-bootstrap:
+        type: boolean
+        default: false
     steps:
       - checkout
       - restore_cache:
@@ -32,9 +36,13 @@ commands:
       - run:
           name: npm i root deps
           command: npm install --no-package-lock
-      - run:
-          name: lerna bootstrap
-          command: ./node_modules/.bin/lerna bootstrap --no-ci
+      - when:
+          condition:
+            not: << parameters.skip-bootstrap >>
+          steps:
+            - run:
+                name: lerna bootstrap
+                command: ./node_modules/.bin/lerna bootstrap --no-ci
   run_lerna_tests:
     steps:
       - run:
@@ -43,6 +51,14 @@ commands:
       # - run:
       #     name: npm run test:ci
       #     command: npm run test:ci
+  build_ci_test:
+    parameters:
+      package-name:
+        type: string
+    steps:
+      - run:
+          name: npm run ci:build --prefix packages/<< parameters.package-name >>
+          command: npm run ci:build --prefix packages/<< parameters.package-name >>
   run_generic_test:
     parameters:
       package-name:
@@ -50,7 +66,7 @@ commands:
     steps:
       - run:
           name: npm run test --prefix packages/<< parameters.package-name >>
-          command: npm run test --prefix packages/<< parameters.package-name >>
+          command: npm run ci:test --prefix packages/<< parameters.package-name >>
   run_test-poetry:
     parameters:
       python_version:
@@ -66,7 +82,7 @@ commands:
             pip install poetry==$POETRY_VERSION
             pip install --force-reinstall virtualenv
             # Run node tests
-            npm run test --prefix packages/poetry
+            npm run ci:test --prefix packages/poetry
           environment:
             PYTHON_VERSION: << parameters.python_version >>
             POETRY_VERSION: << parameters.poetry_version >>
@@ -78,7 +94,7 @@ commands:
         type: string
     steps:
       - run:
-          name: npm run test --prefix packages/pipenv-pipfile
+          name: npm run ci:test --prefix packages/pipenv-pipfile
           command: |
             # Install pyenv
             rm -rf "$PYENV_ROOT"
@@ -94,7 +110,7 @@ commands:
             export PATH="$PATH:$HOME/.local/bin"
             node -v && pyenv -v && python --version && python -m pipenv --version
             # Run node tests
-            npm run test --prefix packages/pipenv-pipfile
+            npm run ci:test --prefix packages/pipenv-pipfile
           environment:
             PYTHON_VERSION: << parameters.python_version >>
             PIPENV_VER: << parameters.pipenv_version >>
@@ -130,6 +146,7 @@ jobs:
       - image: cimg/node:lts
     steps:
       - checkout_and_install
+          skip-bootstrap: true
       - run: npx lerna changed --loglevel error --json | jq -r '.[].name' | grep @snyk/<< parameters.package >>
   test_pipenv-pipfile:
     parameters:
@@ -143,6 +160,8 @@ jobs:
       - image: cimg/python:<< parameters.python_version >>-node
     steps:
       - checkout_and_install
+      - build_ci_test:
+          package-name: "pipenv-pipfile"
       - switch_node_version:
           node_version: << parameters.node_version >>
       - run_test-pipenv-pipfile:
@@ -160,6 +179,8 @@ jobs:
       - image: cimg/python:<< parameters.python_version >>-node
     steps:
       - checkout_and_install
+      - build_ci_test:
+          package-name: "poetry"
       - switch_node_version:
           node_version: << parameters.node_version >>
       - run_test-poetry:
@@ -173,6 +194,8 @@ jobs:
       - image: node:lts
     steps:
       - checkout_and_install
+      - build_ci_test:
+          package-name: "pip-requirements"
       - switch_node_version:
           node_version: << parameters.node_version >>
       - run_generic_test:
@@ -185,6 +208,8 @@ jobs:
       - image: node:lts
     steps:
       - checkout_and_install
+      - build_ci_test:
+          package-name: "child-process"
       - switch_node_version:
           node_version: << parameters.node_version >>
       - run_generic_test:
