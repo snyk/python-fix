@@ -90,6 +90,7 @@ commands:
             python -m pip install --user pipenv===$PIPENV_VER
             export PATH="$PATH:$HOME/.local/bin"
             node -v && pyenv -v && python --version && python -m pipenv --version
+            rm -rf .pipenv
             # Run node tests
             ./node_modules/.bin/lerna run test --scope @snyk/fix-pipenv-pipfile --stream
           environment:
@@ -130,9 +131,9 @@ jobs:
     docker:
       - image: cimg/python:<< parameters.python_version >>-node
     steps:
+      - checkout_and_install
       - switch_node_version:
           node_version: << parameters.node_version >>
-      - checkout_and_install
       - run_test-pipenv-pipfile:
           python_version: << parameters.python_version >>
           pipenv_version: << parameters.pipenv_version >>
@@ -147,9 +148,9 @@ jobs:
     docker:
       - image: cimg/python:<< parameters.python_version >>-node
     steps:
+      - checkout_and_install
       - switch_node_version:
           node_version: << parameters.node_version >>
-      - checkout_and_install
       - run_test-poetry:
           python_version: << parameters.python_version >>
           poetry_version: << parameters.poetry_version >>
@@ -158,9 +159,11 @@ jobs:
       node_version:
         type: string
     docker:
-      - image: node:<< parameters.node_version >>
+      - image: node:lts
     steps:
       - checkout_and_install
+      - switch_node_version:
+          node_version: << parameters.node_version >>
       - run_generic_test:
           package-name: "@snyk/fix-pip-requirements"
   test_child-process:
@@ -168,9 +171,11 @@ jobs:
       node_version:
         type: string
     docker:
-      - image: node:<< parameters.node_version >>
+      - image: node:lts
     steps:
       - checkout_and_install
+      - switch_node_version:
+          node_version: << parameters.node_version >>
       - run_generic_test:
           package-name: "@snyk/child-process"
 workflows:
