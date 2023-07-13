@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.1](https://github.com/snyk/python-fix/compare/@snyk/child-process@0.4.0...@snyk/child-process@0.4.1) (2023-07-13)
+
+### Bug Fixes
+
+- bypass Snyk CLI proxy ([f4f5218](https://github.com/snyk/python-fix/commit/f4f52187c7d0a6a3f3c3a000b21c0ba25ee4bf10))
+
 # [0.4.0](https://github.com/snyk/python-fix/compare/@snyk/child-process@0.3.4...@snyk/child-process@0.4.0) (2023-07-13)
 
 ### Bug Fixes

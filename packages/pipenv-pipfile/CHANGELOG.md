@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.1](https://github.com/snyk/python-fix/compare/@snyk/fix-pipenv-pipfile@0.7.0...@snyk/fix-pipenv-pipfile@0.7.1) (2023-07-13)
+
+**Note:** Version bump only for package @snyk/fix-pipenv-pipfile
+
 # [0.7.0](https://github.com/snyk/python-fix/compare/@snyk/fix-pipenv-pipfile@0.6.1...@snyk/fix-pipenv-pipfile@0.7.0) (2023-07-13)
 
 ### Bug Fixes
