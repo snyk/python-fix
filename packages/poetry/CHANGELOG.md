@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/snyk/python-fix/compare/@snyk/fix-poetry@0.8.4...@snyk/fix-poetry@0.9.0) (2023-07-13)
+
+### Bug Fixes
+
+- revert to jest 28 for node 12 support ([b0954cf](https://github.com/snyk/python-fix/commit/b0954cf2d22b73bdb87976da9633a61994c66019))
+
+### Features
+
+- refactor tests to run compiled js ([160f9c3](https://github.com/snyk/python-fix/commit/160f9c3b78095e02ff6479a75a1083898b1a097a))
+
 ## [0.8.4](https://github.com/snyk/python-fix/compare/@snyk/fix-poetry@0.8.3...@snyk/fix-poetry@0.8.4) (2023-07-10)
 
 ### Bug Fixes
