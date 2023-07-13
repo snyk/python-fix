@@ -2,8 +2,7 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "lint": "prettier --check '{''packages/*/{lib,src,test}/!(fixtures)/**/*,*}.{js,ts,yml}'",
-    "test:ci": "node run_test.js"
+    "lint": "prettier --check '{''packages/*/{lib,src,test}/!(fixtures)/**/*,*}.{js,ts,yml}'"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.60.1",
