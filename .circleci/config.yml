@@ -222,7 +222,7 @@ workflows:
           name: Scan repository for secrets
           context:
             - snyk-bot-slack
-          channel: team-link-pipeline-info
+          channel: snyk-on-snyk-fix
 
       - build-test:
           context: snyk/python-fix/circleci
