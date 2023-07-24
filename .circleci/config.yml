@@ -44,6 +44,20 @@ commands:
             - run:
                 name: lerna bootstrap
                 command: ./node_modules/.bin/lerna bootstrap --no-ci
+  # Halts the job if the package is unchanged
+  check_package_changed:
+    parameters:
+      package:
+        type: string
+    steps:
+      - checkout_and_install:
+          skip-bootstrap: true
+      - run: |
+          npx lerna changed --loglevel error --json \
+            | jq -r '.[].name' \
+            | grep @snyk/<< parameters.package >> \
+          || circleci-agent step halt
+
   run_lerna_tests:
     steps:
       - run:
@@ -138,16 +152,6 @@ jobs:
             git config --global user.name "CircleCI"
             ./node_modules/.bin/lerna run build
             ./node_modules/.bin/lerna publish --ignore-scripts --yes --no-verify-access
-  check_package_changed:
-    parameters:
-      package:
-        type: string
-    docker:
-      - image: cimg/node:lts
-    steps:
-      - checkout_and_install:
-          skip-bootstrap: true
-      - run: npx lerna changed --loglevel error --json | jq -r '.[].name' | grep @snyk/<< parameters.package >>
   test_pipenv-pipfile:
     parameters:
       node_version:
@@ -159,6 +163,8 @@ jobs:
     docker:
       - image: cimg/python:<< parameters.python_version >>-node
     steps:
+      - check_package_changed:
+          package: fix-pipenv-pipfile
       - checkout_and_install
       - build_ci_test:
           package-name: "pipenv-pipfile"
@@ -178,6 +184,8 @@ jobs:
     docker:
       - image: cimg/python:<< parameters.python_version >>-node
     steps:
+      - check_package_changed:
+          package: fix-poetry
       - checkout_and_install
       - build_ci_test:
           package-name: "poetry"
@@ -193,6 +201,8 @@ jobs:
     docker:
       - image: node:lts
     steps:
+      - check_package_changed:
+          package: fix-pip-requirements
       - checkout_and_install
       - build_ci_test:
           package-name: "pip-requirements"
@@ -207,6 +217,8 @@ jobs:
     docker:
       - image: node:lts
     steps:
+      - check_package_changed:
+          package: child-process
       - checkout_and_install
       - build_ci_test:
           package-name: "child-process"
@@ -232,13 +244,7 @@ workflows:
                 - main
                 - /pull\/[0-9]+/
 
-      - check_package_changed:
-          name: Check @snyk/fix-pipenv-pipfile changed
-          package: fix-pipenv-pipfile
-
       - test_pipenv-pipfile:
-          requires:
-            - Check @snyk/fix-pipenv-pipfile changed
           name: Package pipenv-pipfile | Node.js << matrix.node_version >> | Python << matrix.python_version >> | pyenv << matrix.pipenv_version >>
           matrix:
             parameters:
@@ -257,12 +263,7 @@ workflows:
                 ]
               # Update the SUPPORTED.md as well if these versions change
               python_version: ["3.10", "3.9", "3.8", "3.7"]
-      - check_package_changed:
-          name: Check @snyk/fix-poetry changed
-          package: fix-poetry
       - test_poetry:
-          requires:
-            - Check @snyk/fix-poetry changed
           name: Package poetry | Node.js << matrix.node_version >> | Python << matrix.python_version >> | Poetry << matrix.poetry_version >>
           matrix:
             parameters:
@@ -280,22 +281,12 @@ workflows:
                 ]
               # Update the SUPPORTED.md as well if these versions change
               python_version: ["3.10", "3.9", "3.8", "3.7"]
-      - check_package_changed:
-          name: Check @snyk/fix-pip-requirements changed
-          package: fix-pip-requirements
       - test_pip-requirements:
-          requires: 
-            - Check @snyk/fix-pip-requirements changed
           name: Package pip-requirements | Node.js << matrix.node_version >>
           matrix:
             parameters:
               node_version: ["12", "14", "16"]
-      - check_package_changed:
-          name: Check @snyk/child-process changed
-          package: child-process
       - test_child-process:
-          requires: 
-            - Check @snyk/child-process changed
           name: Package child-process | Node.js << matrix.node_version >>
           matrix:
             parameters:
