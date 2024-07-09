@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   snyk: snyk/snyk@0.0.8
-  prodsec: snyk/prodsec-orb@1.0
+  prodsec: snyk/prodsec-orb@1
 
 commands:
   switch_node_version:
@@ -226,6 +226,15 @@ jobs:
           node_version: << parameters.node_version >>
       - run_generic_test:
           package-name: "child-process"
+  security-scans:
+    resource_class: small
+    docker:
+      - image: node:lts
+    steps:
+      - checkout_and_install
+      - prodsec/security_scans:
+          mode: auto
+          iac-scan: disabled
 workflows:
   version: 2
   build-test:
@@ -235,7 +244,8 @@ workflows:
           context:
             - snyk-bot-slack
           channel: snyk-on-snyk-fix
-
+      - security-scans:
+          context: snyk/python-fix/circleci
       - build-test:
           context: snyk/python-fix/circleci
           filters:
