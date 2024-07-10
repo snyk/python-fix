@@ -139,6 +139,7 @@ jobs:
       - prodsec/security_scans:
           mode: auto
           iac-scan: disabled
+          open-source-additional-arguments: --exclude=test
   build-test:
     docker:
       - image: cimg/node:lts
