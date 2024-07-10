@@ -129,6 +129,20 @@ commands:
             PYTHON_VERSION: << parameters.python_version >>
             PIPENV_VER: << parameters.pipenv_version >>
 jobs:
+  security-scans:
+    resource_class: small
+    docker:
+      - image: node:lts
+    parameters:
+        skip-bootstrap:
+          type: boolean
+          default: false
+    steps:
+      - checkout_and_install
+          skip-bootstrap: true
+      - prodsec/security_scans:
+          mode: auto
+          iac-scan: disabled
   build-test:
     docker:
       - image: cimg/node:lts
@@ -226,16 +240,7 @@ jobs:
           node_version: << parameters.node_version >>
       - run_generic_test:
           package-name: "child-process"
-  security-scans:
-    resource_class: small
-    docker:
-      - image: node:lts
-    steps:
-      - checkout_and_install
-          skip-bootstrap: true
-      - prodsec/security_scans:
-          mode: auto
-          iac-scan: disabled
+
 workflows:
   version: 2
   build-test:
