@@ -132,7 +132,7 @@ jobs:
   security-scans:
     resource_class: small
     docker:
-      - image: node:lts
+      - image: cimg/node:lts
     steps:
       - checkout_and_install:
           skip-bootstrap: true
