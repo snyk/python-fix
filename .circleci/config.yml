@@ -252,7 +252,6 @@ workflows:
                 - main         
       - security-scans:
           context: snyk/python-fix/circleci
-          skip-bootstrap: true
       - build-test:
           context: snyk/python-fix/circleci
           filters:
