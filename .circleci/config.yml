@@ -232,6 +232,7 @@ jobs:
       - image: node:lts
     steps:
       - checkout_and_install
+          skip-bootstrap: true
       - prodsec/security_scans:
           mode: auto
           iac-scan: disabled
@@ -244,6 +245,10 @@ workflows:
           context:
             - snyk-bot-slack
           channel: snyk-on-snyk-fix
+          filters:
+            branches:
+              ignore:
+                - main         
       - security-scans:
           context: snyk/python-fix/circleci
       - build-test:
