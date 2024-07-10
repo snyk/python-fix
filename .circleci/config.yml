@@ -251,7 +251,9 @@ workflows:
               ignore:
                 - main         
       - security-scans:
-          context: snyk/python-fix/circleci
+          context: 
+            - devex_fix
+            - snyk/python-fix/circleci
       - build-test:
           context: snyk/python-fix/circleci
           filters:
