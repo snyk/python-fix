@@ -134,7 +134,8 @@ jobs:
     docker:
       - image: cimg/node:lts
     steps:
-      - checkout_and_install
+      - checkout_and_install:
+          skip-bootstrap: true
       - prodsec/security_scans:
           mode: auto
           iac-scan: disabled
