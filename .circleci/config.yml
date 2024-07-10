@@ -136,6 +136,7 @@ jobs:
     parameters:
         skip-bootstrap:
           type: boolean
+          default: false
     steps:
       - checkout_and_install
           skip-bootstrap: << parameters.skip-bootstrap >>
