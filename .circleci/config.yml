@@ -138,7 +138,7 @@ jobs:
       - run:
           command: npx lerna exec -- npm install
       - prodsec/security_scans:
-          mode: auto
+          mode: upload
           iac-scan: disabled
           open-source-additional-arguments: --exclude=test
   build-test:
