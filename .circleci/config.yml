@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   snyk: snyk/snyk@0.0.8
-  prodsec: snyk/prodsec-orb@1.0
+  prodsec: snyk/prodsec-orb@1
 
 commands:
   switch_node_version:
@@ -129,6 +129,18 @@ commands:
             PYTHON_VERSION: << parameters.python_version >>
             PIPENV_VER: << parameters.pipenv_version >>
 jobs:
+  security-scans:
+    resource_class: small
+    docker:
+      - image: cimg/node:lts
+    steps:
+      - checkout
+      - run:
+          command: npx lerna exec -- npm install
+      - prodsec/security_scans:
+          mode: auto
+          iac-scan: disabled
+          open-source-additional-arguments: --exclude=test
   build-test:
     docker:
       - image: cimg/node:lts
@@ -226,6 +238,7 @@ jobs:
           node_version: << parameters.node_version >>
       - run_generic_test:
           package-name: "child-process"
+
 workflows:
   version: 2
   build-test:
@@ -235,7 +248,14 @@ workflows:
           context:
             - snyk-bot-slack
           channel: snyk-on-snyk-fix
-
+          filters:
+            branches:
+              ignore:
+                - main         
+      - security-scans:
+          context: 
+            - devex_fix
+            - snyk/python-fix/circleci
       - build-test:
           context: snyk/python-fix/circleci
           filters:
