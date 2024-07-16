@@ -9,7 +9,7 @@ export function extractPoetryVersion(stdout: string): string | null {
    * Poetry version 1.1.4
    */
   let version: string | null = null;
-  const re = new RegExp(/^Poetry\sversion\s([0-9.]+)/, 'g');
+  const re = new RegExp(/^Poetry\s\(?version\s([0-9.]+)\)?/, 'g');
   const match = re.exec(stdout);
   if (match) {
     version = match[1];
