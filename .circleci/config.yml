@@ -134,6 +134,7 @@ jobs:
     docker:
       - image: cimg/node:lts
     steps:
+      - checkout
       - run:
           command: npx lerna exec -- npm install
       - prodsec/security_scans:
